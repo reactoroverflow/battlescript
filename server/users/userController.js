@@ -95,7 +95,7 @@ module.exports = {
   },
 
   signout: function (req, res, next){
-      console.log("this is req.body",req.body);
+      // console.log("this is req.body",req.body);
       var username = req.body.username;
       var findUser = Q.nbind(User.findOne, User);
       
@@ -113,13 +113,14 @@ module.exports = {
     var findUser = Q.nbind(User.findOne, User);
     findUser({username: username})
       .then(function (user) {
-        console.log(user);
+        // console.log(user);
         res.send({
           totalWins: user.totalWins,
           currentStreak: user.currentStreak,
-          longestStreak: user.longestStreak
-        })
-      })
+          longestStreak: user.longestStreak,
+          avatar: user.avatar
+        });
+      });
     
   }, 
 
@@ -143,6 +144,17 @@ module.exports = {
       });
   },
 
+  avatarChange: function(req, res, next) {
+    // console.log("req.body ==== ", req.body);
+    var findUser = Q.nbind(User.findOne, User);
+    findUser({username: req.body.username})
+      .then(function (user) {
+        user.avatar = req.body.avatar;
+        // console.log("user === ", user);
+        user.save();
+      });
+  },
+
   leaderboard: function(req, res, next){
 
     User.find()
@@ -150,7 +162,7 @@ module.exports = {
       .sort({totalWins: -1})
       .limit(5) // Get every user. Exclude password, id, salt.
       .then(function(users){
-        console.log("USERS: ", users);
+        // console.log("USERS: ", users);
         res.send(users);
       })
 

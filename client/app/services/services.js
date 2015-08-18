@@ -52,8 +52,8 @@ angular.module('battlescript.services', [])
     $window.localStorage.removeItem('battlepro');
     $location.path('/signin');
 
-    console.log('this is user!!!', user)
-    console.log('inside signout factory')
+    // console.log('this is user!!!', user)
+    // console.log('inside signout factory')
     
     return $http({
       method: 'POST',
@@ -107,22 +107,33 @@ angular.module('battlescript.services', [])
       method: 'POST',
       url: '/api/users/statchange',
       data: {username: username, winIncrease: winIncrease}
-    })
-  }
+    });
+  };
+
+  //send avatar to server
+  var avatarChange = function(username, avatar) {
+    // console.log("i am in services trying to sent a POST req to server");
+    return $http({
+      method: 'POST',
+      url: '/api/users/avatarchange',
+      data: {username: username, avatar: avatar}
+    });
+  };
 
   var getLeaderboard = function(){
     return $http({
       method: 'GET',
       url: '/api/users/leaderboard'
-    })
-  }
+    });
+  };
 
   return {
     getAuthUser: getAuthUser,
     getStats: getStats,
     statChange: statChange,
+    avatarChange: avatarChange,
     getLeaderboard: getLeaderboard
-  }
+  };
 
 })
 
@@ -148,7 +159,7 @@ angular.module('battlescript.services', [])
 
   return {
     createSocket: createSocket
-  }
+  };
 })
 
 ////////////////////////////////////////////////////////////
@@ -229,7 +240,7 @@ angular.module('battlescript.services', [])
     isValidBattleRoom: isValidBattleRoom,
     getBattle: getBattle,
     attemptBattle: attemptBattle
-  }
+  };
 })
 
 ////////////////////////////////////////////////////////////

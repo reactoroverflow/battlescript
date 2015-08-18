@@ -11,28 +11,33 @@ angular.module('battlescript.dashboard', [])
 
   $scope.nightmare = function() {
     $scope.challengeLevel = 0 + Math.floor(Math.random()*2);
-    $scope.challengeLevelDesc = 'NIGHTMARE!!!!!!!!';
+    $scope.challengeLevelDesc = 'NIGHTMARE!!!';
   };
   $scope.hard = function() {
     $scope.challengeLevel = 2 + Math.floor(Math.random()*2);
-    $scope.challengeLevelDesc = 'FREAKISHLY HARD!!!!!!!';
+    $scope.challengeLevelDesc = 'FREAKISHLY HARD!!!';
   };
   $scope.meh = function() {
     $scope.challengeLevel = 4 + Math.floor(Math.random()*2);
-    $scope.challengeLevelDesc = 'Mehhhhh.......';
+    $scope.challengeLevelDesc = 'Mehhhhh...I got this.';
   };
   $scope.cake = function() {
-    $scope.challengeLevel = 6 + Math.floor(Math.random()*3);
-    $scope.challengeLevelDesc = 'I have imposter syndrome...';
+    $scope.challengeLevel = 6 + Math.floor(Math.random()*2);
+    $scope.challengeLevelDesc = 'This should be cake!';
+  };
+  $scope.superNewb = function() {
+    $scope.challengeLevel = 8;
+    $scope.challengeLevelDesc = 'Easy mode enabled.';
   };
 
   // Set up all dashboard info.
   $scope.challengeLevel = 6 + Math.floor(Math.random()*3);
-  $scope.challengeLevelDesc = 'I have imposter syndrome...';
+  $scope.challengeLevelDesc = 'This should be cake!';
   $scope.currentStreak = 0;
   $scope.longestStreak = 0;
   $scope.totalWins = 0;
   $scope.leaderboard = [];
+  $scope.challengeClicked = {};
 
   ////////////////////////////////////////////////////////////
   // sets up all the dashboard stuff here
@@ -60,7 +65,6 @@ angular.module('battlescript.dashboard', [])
 
   $scope.onlineUsers;
 
-
   $rootScope.dashboardSocket.on('updateUsers', function(data) {
     //TODO: Online users.
 
@@ -76,18 +80,79 @@ angular.module('battlescript.dashboard', [])
 
   });
 
+  ////////////////////////////////////////////////////////////
+  // friends
+  ////////////////////////////////////////////////////////////
+  $scope.friends = {cody: 'daig', andrew: 'kishino', lina: 'lu'};
+
+  ////////////////////////////////////////////////////////////
+  // set an avatar for a user
+  ////////////////////////////////////////////////////////////
+
+  $scope.avatars = [{
+    'img': 'http://www.iosdevjournal.com/wp/wp-content/uploads/2011/12/NerdsGeeksGurus_individualsGEEK.png',
+    'name': 'Tyrion'
+    }, {
+    'img': 'http://www.iosdevjournal.com/wp/wp-content/uploads/2011/12/NerdsGeeksGurus_individualsNERD.png',
+    'name': 'Theon'
+    }, {
+    'img': 'http://s3.picofile.com/file/7819333759/large2.gif',
+    'name': 'Arya'
+    }, {
+    'img': 'http://1.bp.blogspot.com/_d3i3RAv23H8/S0UhYVRckxI/AAAAAAAAAa8/p5n7cm9Ykho/s400/nerd.png',
+    'name': 'Varys'
+    }, {
+    'img': 'http://fc00.deviantart.net/fs70/i/2011/087/1/3/young_nerd_by_costalonga-d3co1j3.png',
+    'name': 'Samwell'
+    }, {
+    'img': 'http://24.media.tumblr.com/tumblr_m3xg9fFpvu1rnsy7to1_500.png',
+    'name': 'Joffrey'
+    }, {
+    'img': 'http://orig15.deviantart.net/33d6/f/2011/058/e/1/hello_kitty_nerd_by_ladypinkilicious-d3ajpii.png',
+    'name': 'Melisandre'
+    }, {
+    'img': 'http://www.designtickle.com/cdnmedia/-/2012/07/design-code-html5-web-development/20-yootheme-illustration-html5-nerd.png',
+    'name': 'Jaqen'
+    }, {
+    'img': 'http://www.pubzi.com/f/lg-geek-nerd-smiley-surprise-emoticon.png',
+    'name': 'Tywin'
+    }
+  ];
+  $scope.my = {
+    favorite: ''
+  };
+
+  $scope.toShowImagePreview = false;
+    
+  $scope.showImagePreviewFn = function() {
+    $scope.toShowImagePreview = true;
+  };
+
+  $scope.avatar = '';
+  // console.log("$scope.avatar", $scope.avatar);
+
+  $scope.setAvatar = function() {
+    Users.avatarChange($scope.username, $scope.my.favorite.img)
+      .then(function() {
+    });
+    $scope.toShowImagePreview = false;
+    $scope.getStats($scope.username);
+  };
 
   ////////////////////////////////////////////////////////////
   // get user stats for dashboard
   ////////////////////////////////////////////////////////////
 
   $scope.getStats = function(username) {
+    // console.log("getting stats!");
     Users.getStats(username)
       .then(function(stats){
+        // console.log("here are the stats === ", stats);
         $scope.currentStreak = stats.currentStreak;
         $scope.longestStreak = stats.longestStreak;
         $scope.totalWins = stats.totalWins;
         $scope.points = $scope.totalWins * 10;
+        $scope.avatar = stats.avatar;
       });
   };
 
@@ -115,8 +180,10 @@ angular.module('battlescript.dashboard', [])
   // Open up socket with specific dashboard server handler
   $scope.requestBattle = function($event, opponentUsername) {
     $event.preventDefault();
+    $scope.challengeClicked[opponentUsername] = true;
     if (!$scope.challengeLevel) $scope.challengeLevel = 4 + Math.floor(Math.random()*2);
     // console.log("CHALLENGE LEVEL: ", $scope.challengeLevel);
+
 
     // now, we need to emit to the socket
     $rootScope.dashboardSocket.emit('outgoingBattleRequest', {
