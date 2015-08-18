@@ -8,6 +8,10 @@
     "Omar Shaikh <oshaikh13@gmail.com>",
     "Eric Le <hle2806@uw.edu>"
   ],
+  "scripts": {
+    "test": "gulp test",
+    "postinstall": "bower install --config.interactive=false"
+  },
   "license": "MIT",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -25,11 +29,18 @@
     "socket.io": "^1.3.6"
   },
   "devDependencies": {
+    "expect.js": "^0.3.1",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^2.3.1",
     "gulp-minify-css": "^1.2.0",
+    "gulp-mocha": "^2.1.3",
+    "gulp-nodemon": "^2.0.3",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.0.4",
-    "gulp-util": "^3.0.6"
+    "gulp-util": "^3.0.6",
+    "jasmine-core": "^2.3.4",
+    "karma": "^0.13.9",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-jasmine": "^0.3.6"
   }
 }
