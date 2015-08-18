@@ -1,5 +1,4 @@
 <header-main user-info="userInfo"></header-main>
-
 <main class="main">
   <div class="container">
     <div class="battle">
@@ -18,9 +17,9 @@
       </div>
 
       <div class="battle-field" ng-class="battleFieldClass">
-        
         <div class="battle-field__header">
           <p>{{ user }} <span>-vs-</span> {{ opponent }}</p>
+
         </div><!-- /battlefield header -->
 
         <div class="grid grid--l">
@@ -35,12 +34,30 @@
           </div><!-- grid item -->
 
           <div class="grid__item grid__item--66-l">
+            <!-- powers -->
+            <div ng-style="{'vertical-align': 'text-top', 'position':'relative'}">
+            <img id="swordnumber1" src='assets/img/crossed-swords.png' width="50" ng-style="{'vertical-align': 'middle', 'margin-bottom':'6px', 'margin-right':'12px'}"></img>
 
-            <div class="battle-player battle-player--user">
+            <div id="blurify__button" ng-style="{'display':'inline', 'border-radius':'5px', 'background':'black', 'padding':'10px', 'cursor':'pointer'}"><font color="white">Blurify (10 pts)</font></div>
+
+            <!-- future feature -->
+            <div id="jumblify__button" ng-style="{'display':'inline', 'border-radius':'5px', 'background':'black', 'padding':'10px', 'cursor':'pointer', 'margin-left':'5px'}"><font color="white">Jumblify (50 pts)</font></div>
+
+            <div id="blurify__button" ng-style="{'display':'inline', 'border-radius':'5px', 'background':'#2B3A42', 'padding':'10px', 'margin-left':'5px'}"><font color="white">Points: {{totalPoints}} </font></div> 
+
+            <img id="swordnumber2" src='assets/img/crossed-swords.png' width="50" ng-style="{'vertical-align': 'middle', 'margin-bottom':'6px', 'margin-left':'15px'}"></img>
+            </div>  
+
+            <!-- player solution input field -->
+            <div ng-style="{'margin-top':'15px'}" class="battle-player battle-player--user">
               <h3 class="battle-player__heading">Your solution:</h3>
-              <form action="#" class="editor">
-                <div class="editor__field">
-                  <textarea name="editor--user" id="editor--user" class="editor__text"></textarea>
+              <form action="#" class="editor" ng-style="{'position':'relative'}">
+                  <!-- blurify overlay -->
+                <div class="editor__field" ng-style="{'z-index':'9999', 'position':'relative'}">
+                  <div class="blurify__overlay" ng-style="{'position':'absolute', 'box-sizing':'inherit', 'z-index':'9999', 'background-color':'white', 'height':'100%', 'width':'100%', 'display':'none'}">
+                  </div>
+                  <textarea name="editor--user" id="editor--user" class="editor__text test123">
+                  </textarea>
                 </div>
                 <div class="editor__footer">
                   <button type="submit" class="btn btn--secondary btn--small" ng-click="attemptBattle($event)">

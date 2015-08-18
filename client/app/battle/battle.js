@@ -1,6 +1,76 @@
 angular.module('battlescript.battle', [])
 
 .controller('BattleController', function($rootScope, $scope, $timeout, $location, $stateParams, Users, Battle, Editor) {
+  $scope.username = Users.getAuthUser();
+
+  ////////////////////////////////////////////////////////////
+  // jQuery function
+  ////////////////////////////////////////////////////////////
+  jQuery(function($){
+
+    $("#blurify__button").hover(function() {
+      if($scope.totalPoints < 10) {
+        $("#blurify__button").css('cursor','none');
+      }
+    });
+
+    $("#jumblify__button").hover(function() {
+      if($scope.totalPoints < 50) {
+        $("#jumblify__button").css('cursor','none');
+      }
+    }); 
+
+    $("#blurify__button").click(function() {
+      console.log("blurify button clicked");
+      if($scope.totalPoints>=10) {
+        $scope.handleBlurifyEvents();
+        Users.pointsChange($scope.user, -10); //blurify costs 10 points
+        $scope.getStats($scope.username);
+        return;
+      } 
+    });
+
+    $("#jumblify__button").click(function() {
+      console.log("jumblify button clicked");
+      if($scope.totalPoints>=50) {
+        $scope.handleJumblifyEvents();
+        Users.pointsChange($scope.user, -50); //blurify costs 10 points
+        $scope.getStats($scope.username);
+        return;
+      } 
+    });
+
+    // FOR TESTING AND DEMO (maybe for deployed also)
+    var secretCode = '';
+
+    $("#swordnumber1").click(function() {
+      secretCode+="one";
+      // console.log(secretCode);
+    });
+
+    $("#swordnumber2").click(function() {
+      secretCode+='two';
+      // console.log(secretCode);
+      if(secretCode === "onetwoonetwotwo") {
+        Users.pointsChange($scope.user, 100);
+        // console.log('totalPoints $scope.totalPoints', $scope.totalPoints)
+        $scope.getStats($scope.username);        
+      }
+    });
+
+  });
+
+
+
+
+
+  ////////////////////////////////////////////////////////////
+  // Displays insufficient point error message
+  ////////////////////////////////////////////////////////////
+  // $scope.displayPointsErrorMessage = function() {
+  //   console.log('displayPointsErrorMessage executed');
+  //   $rootScope.pointsErrorMessage = 'Not enough points!';    
+  // }
 
   ////////////////////////////////////////////////////////////
   // fetch auth user and pass in info to directive
@@ -8,6 +78,22 @@ angular.module('battlescript.battle', [])
 
   $scope.user = Users.getAuthUser();
   $scope.userInfo = {username: $scope.user};
+
+  ////////////////////////////////////////////////////////////
+  // get user stats for dashboard
+  ////////////////////////////////////////////////////////////
+
+  $scope.getStats = function(username) {
+    Users.getStats(username)
+      .then(function(stats){
+        $scope.currentStreak = stats.currentStreak;
+        $scope.longestStreak = stats.longestStreak;
+        $scope.totalWins = stats.totalWins;
+        $scope.totalPoints = stats.totalPoints;
+      });
+  };
+
+  $scope.getStats($scope.username);
 
 
 
@@ -18,10 +104,6 @@ angular.module('battlescript.battle', [])
   ////////////////////////////////////////////////////////////
 
   $scope.spinnerOn = true;
-
-
-
-
 
   ////////////////////////////////////////////////////////////
   // check first to see if valid battle room id
@@ -181,6 +263,58 @@ angular.module('battlescript.battle', [])
     $scope.getBattle();
   };
 
+  ////////////////////////////////////////////////////////////
+  // handle power(jumblify) events
+  ////////////////////////////////////////////////////////////
+  $scope.handleJumblifyEvents = function() {
+    $rootScope.battleSocket.emit('powerJumblifySent');      
+  }
+
+  $scope.handleJumblifyReceiveEvents = function() {
+
+    $rootScope.battleSocket.on('powerJumblifyReceived', function() {
+      var cursorPosition = document.getElementsByTagName('input').selectionStart;
+
+      var currentTextareaValue = $scope.userEditor.getValue();
+      var length = currentTextareaValue.length;
+      var index1 = length / 3;
+      var index2 = length / 3 * 2;
+      var textChunk1 = currentTextareaValue.slice(0,index1);
+      var textChunk2 = currentTextareaValue.slice(index1,index2);
+      var textChunk3 = currentTextareaValue.slice(index2,length);
+
+      var generateRandomNumber = Math.random();
+      if(generateRandomNumber < 0.33) {
+        $scope.userEditor.setValue(textChunk1 + _.shuffle(textChunk2.split('')).join('') + textChunk3);
+      } else if (generateRandomNumber < 0.66) {
+        $scope.userEditor.setValue(textChunk1 + textChunk2 + _.shuffle(textChunk3.split('')).join(''));            
+      } else {
+        $scope.userEditor.setValue(_.shuffle(textChunk1.split('')).join('') + textChunk2 + textChunk3);            
+      }
+    });
+  }
+
+
+
+
+
+  ////////////////////////////////////////////////////////////
+  // handle power(blurify) events
+  ////////////////////////////////////////////////////////////
+  $scope.handleBlurifyEvents = function() {
+    $rootScope.battleSocket.emit('powerBlurifySent');      
+  }
+
+  $scope.handleBlurifyReceiveEvents = function() {
+    $rootScope.battleSocket.on('powerBlurifyReceived', function() {
+        jQuery(function($){
+          $('.blurify__overlay').css('display','inline');
+          $('.blurify__overlay').css("opacity","0.85");
+          $('.blurify__overlay').fadeIn( 2000 ).delay( 5000 ).slideUp( 400 );
+        });
+    });
+  }
+
 
 
 
@@ -256,6 +390,8 @@ angular.module('battlescript.battle', [])
 
     // handle battle field events
     $scope.handleBattleFieldEvents();
+    $scope.handleBlurifyReceiveEvents();
+    $scope.handleJumblifyReceiveEvents();
   };
 
 
@@ -270,6 +406,7 @@ angular.module('battlescript.battle', [])
     $rootScope.battleSocket.on('opponentWon', function(){
       // Any negative is regarded as a loss. 
       Users.statChange($scope.user, -1);
+      Users.pointsChange($scope.user, 1); //users get one point for every game they play but lost
 
       // alert to the user!
       alert('Looks like your opponent got the answer first!');
@@ -305,6 +442,8 @@ angular.module('battlescript.battle', [])
         console.log(data);
         if (data['passed'] === true) {
           Users.statChange($scope.user, 1); // # of times to increase the wins. Should be 1 always
+          Users.pointsChange($scope.user, 10); //users get 10 points for every game they win
+
           $rootScope.battleSocket.emit('winnerFound');
           $scope.userNotes = "All tests passing!";
           alert('You have the answer. Good job!');
