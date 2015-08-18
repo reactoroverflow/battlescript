@@ -9,26 +9,8 @@ angular.module('battlescript.dashboard', [])
   // up above.
   $scope.userInfo = {username: $scope.username};
 
-  $scope.nightmare = function() {
-    $scope.challengeLevel = 0 + Math.floor(Math.random()*2);
-    $scope.challengeLevelDesc = 'NIGHTMARE!!!!!!!!';
-  };
-  $scope.hard = function() {
-    $scope.challengeLevel = 2 + Math.floor(Math.random()*2);
-    $scope.challengeLevelDesc = 'FREAKISHLY HARD!!!!!!!';
-  };
-  $scope.meh = function() {
-    $scope.challengeLevel = 4 + Math.floor(Math.random()*2);
-    $scope.challengeLevelDesc = 'Mehhhhh.......';
-  };
-  $scope.cake = function() {
-    $scope.challengeLevel = 6 + Math.floor(Math.random()*3);
-    $scope.challengeLevelDesc = 'I have imposter syndrome...';
-  };
-
   // Set up all dashboard info.
-  $scope.challengeLevel = 6 + Math.floor(Math.random()*3);
-  $scope.challengeLevelDesc = 'I have imposter syndrome...';
+  $scope.challengeLevel = 8;
   $scope.currentStreak = 0;
   $scope.longestStreak = 0;
   $scope.totalWins = 0;
@@ -115,7 +97,7 @@ angular.module('battlescript.dashboard', [])
   // Open up socket with specific dashboard server handler
   $scope.requestBattle = function($event, opponentUsername) {
     $event.preventDefault();
-    if (!$scope.challengeLevel) $scope.challengeLevel = 4 + Math.floor(Math.random()*2);
+    if (!$scope.challengeLevel) $scope.challengeLevel = 4;
     // console.log("CHALLENGE LEVEL: ", $scope.challengeLevel);
 
     // now, we need to emit to the socket

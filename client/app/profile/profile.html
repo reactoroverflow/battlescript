@@ -47,13 +47,8 @@
             <div class="dashboard-stats-entry">
               <h3 class="dashboard-stats-entry__title">Problem Level</h3>
               <div class="dashboard-stats-entry__body">
-                <div>Difficulty = {{challengeLevelDesc}}</div>
-                <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="nightmare()">Nightmare</button></p>
-                <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="hard()">Crazy Hard</button></p>
-                <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="meh()">Meh</button></p>
-                <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="cake()">Cake</button></p>
+                <p class="dashboard-stats-entry__stat"><input class="challenge-input" type="text" placeholder="enter a challenge level" ng-model="challengeLevel"/></p>
               </div>
-
             </div>
           </div>
         </div>
