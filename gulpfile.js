@@ -9,7 +9,9 @@ var gulp = require('gulp');
 //////////////////////////////////////////////////
 
 var autoprefixer = require('gulp-autoprefixer');
+var eslint = require('gulp-eslint');
 var gutil = require('gulp-util');
+var jshint = require('gulp-jshint');
 var karmaServer = require('karma').Server;
 var mocha = require('gulp-mocha');
 var minifyCSS = require('gulp-minify-css');
@@ -34,6 +36,8 @@ var dirPaths = {
 //////////////////////////////////////////////////
 
 gulp.task('default', ['watch', 'start']);
+gulp.task('test', ['mocha', 'karma']);
+gulp.task('lint', ['jshint', 'eslint']);
 
 //////////////////////////////////////////////////
 // styles task
@@ -63,12 +67,6 @@ gulp.task('watch', function() {
 });
 
 //////////////////////////////////////////////////
-// test task
-//////////////////////////////////////////////////
-
-gulp.task('test', ['mocha', 'karma']);
-
-//////////////////////////////////////////////////
 // Server test task (mocha)
 //////////////////////////////////////////////////
 
@@ -82,7 +80,7 @@ gulp.task('mocha', function () {
 //////////////////////////////////////////////////
 
 gulp.task('karma', function (done) {
-  new karmaServer({
+  return new karmaServer({
     configFile: __dirname + '/karma.conf.js',
     singleRun: true
   }, done).start();
@@ -101,4 +99,17 @@ gulp.task('start', function () {
     .on('restart', function () {
       console.log('restarted!');
     });
+});
+
+gulp.task('jshint', function() {
+  return gulp.src(['./client/app/**/*.js', './server/**/*.js', './specs/**/*.js'])
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
+});
+
+gulp.task('eslint', function () {
+  return gulp.src(['./client/app/**/*.js', './server/**/*.js', './specs/**/*.js'])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failOnError());
 });
