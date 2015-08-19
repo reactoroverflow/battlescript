@@ -206,7 +206,7 @@ describe('User Model', function () {
     });
   });
 
-  xit('should have an empty avatar if none specified', function (done) {
+  it('should have an empty avatar if none specified', function (done) {
     _user = new User(user);
     _user.save(function (err) {
       User.find({username: user.username}, function (err, users) {
@@ -218,7 +218,7 @@ describe('User Model', function () {
     });
   });
 
-  xit('should save an avatar if specified', function (done) {
+  it('should save an avatar if specified', function (done) {
     user.avatar = 'img/avatar.jpg';
     _user = new User(user);
     _user.save(function (err) {

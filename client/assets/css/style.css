@@ -56,7 +56,7 @@ body {
 
 body {
   color: #777;
-  background-color: #2B3A42;
+  background-color: #BEB5B4;
   font-family: "Roboto", sans-serif;
   font-size: 14px;
   line-height: 1.8;
@@ -75,7 +75,7 @@ h5,
 h6 {
   margin: 0;
   padding: 0;
-  color: #555;
+  color: #BEB5B4;
   font-weight: 700;
   line-height: 1.2;
 }
@@ -86,7 +86,7 @@ h6 {
   
 ----------------------------------------------------------------------------- */
 a {
-  color: #EB7F00;
+  color: red;
   text-decoration: none;
 }
 
@@ -248,6 +248,7 @@ button:focus {
             flex: 0 0 25%;
   }
   .grid__item--33-m {
+
     -webkit-box-flex: 0;
     -webkit-flex: 0 0 33.3333%;
         -ms-flex: 0 0 33.3333%;
@@ -289,6 +290,7 @@ button:focus {
             flex: 0 0 25%;
   }
   .grid__item--33-l {
+    background-color: black;
     -webkit-box-flex: 0;
     -webkit-flex: 0 0 33.3333%;
         -ms-flex: 0 0 33.3333%;
@@ -390,17 +392,17 @@ button:focus {
 }
 
 .nav__link--alt {
-  color: #EB7F00;
+  color: red;
 }
 
 .nav__link:hover {
-  color: #EB7F00;
+  color: red;
   background-color: #fff;
 }
 
 .nav__link--alt:hover {
   color: #fff;
-  background-color: #EB7F00;
+  background-color: red;
 }
 
 @media all and (min-width: 600px) {
@@ -426,7 +428,7 @@ button:focus {
  */
 .header-main {
   padding: 12px 0;
-  background-color: #2B3A42;
+  background-color: #BEB5B4;
 }
 
 .header-main__inner {
@@ -470,7 +472,7 @@ button:focus {
 
 .header-main__user-name {
   margin: 0;
-  color: #EB7F00;
+  color: red;
   font-weight: 300;
 }
 
@@ -520,7 +522,7 @@ button:focus {
 
 .header-main__user-dropdown-item a:hover {
   color: #fff;
-  background-color: #EB7F00;
+  background-color: red;
 }
 
 /* hover state */
@@ -565,7 +567,11 @@ button:focus {
 ----------------------------------------------------------------------------- */
 .main {
   padding: 48px 0;
-  background-color: #fff;
+  background-color: #351D1D;
+  background-image: url("/assets/img/weapon_keyboard_50.png");
+  background-repeat: no-repeat;
+  background-size: 60%;
+  background-position: right;
 }
 
 /* -----------------------------------------------------------------------------
@@ -613,18 +619,18 @@ button:focus {
 .auth__message {
   margin: 12px 0;
   padding: 12px;
-  color: #EB7F00;
+  color: red;
   border: solid 1px #3F5765;
 }
 
 .auth-form {
   padding: 24px;
-  background-color: #3F5765;
+  background-color: #351D1D;
 }
 
 .auth-form__title {
   margin: 0 0 24px 0;
-  color: #EB7F00;
+  color: red;
   font-weight: 400;
   text-align: center;
 }
@@ -712,7 +718,7 @@ button:focus {
 
 .dashboard-stats__title {
   margin-bottom: 24px;
-  color: #EB7F00;
+  color: red;
   font-size: 28px;
   font-weight: 400;
 }
@@ -721,14 +727,14 @@ button:focus {
 .dashboard-stats-entry__title {
   padding: 12px;
   color: #fff;
-  background-color: #EB7F00;
+  background-color: #DC1616;
   font-size: 12px;
   font-weight: 400;
 }
 
 .dashboard-stats-entry__body {
   padding: 12px;
-  background-color: #EFEFEF;
+  background-color: #0A0909;
 }
 
 .dashboard-stats-entry__stat > span {
@@ -847,7 +853,7 @@ button:focus {
 }
 
 .battle-waiting__timer span {
-  color: #EB7F00;
+  color: red;
 }
 
 .battle-waiting__loading {
@@ -879,7 +885,7 @@ button:focus {
 
 .battle-field__header p {
   margin: 0;
-  color: #EB7F00;
+  color: red;
   font-size: 22px;
 }
 
@@ -972,7 +978,7 @@ button:focus {
 .battle-notices__heading {
   padding: 8px;
   color: #fff;
-  background-color: #EB7F00;
+  background-color: red;
   font-size: 12px;
   font-weight: 400;
   text-transform: uppercase;
@@ -980,7 +986,7 @@ button:focus {
 
 .battle-notices__notes {
   padding: 8px;
-  border: solid 1px #EB7F00;
+  border: solid 1px red;
 }
 
 /* -----------------------------------------------------------------------------
@@ -1002,12 +1008,12 @@ button:focus {
 }
 
 .btn--primary.active {
-  background-color: #EB7F00;
+  background-color: red;
 }
 
 .btn--secondary {
   color: #fff;
-  background-color: #EB7F00;
+  background-color: red;
 }
 
 .btn--secondary:not(:disabled):hover {
@@ -1138,7 +1144,7 @@ button:focus {
 .spinner::after {
   width: 24px;
   height: 24px;
-  background-color: #EB7F00;
+  background-color: red;
   border-radius: 18px;
 }
 

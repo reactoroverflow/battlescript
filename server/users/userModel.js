@@ -12,11 +12,16 @@ var UserSchema = new mongoose.Schema({
     lowercase: true
   },
 
+  avatar: {
+    type: String,
+    default: ''
+  },
 
   password: {
     type: String,
     required: true
   },
+  
   salt: String,
 
   currentStreak: {

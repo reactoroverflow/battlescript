@@ -12,14 +12,32 @@
 
       <div class="dashboard-notification" ng-show="userHasBattleRequest && battleRequestStatus === 'init'">
         <h2 class="dashboard-notification__title">Challenge ready!</h2>
-        <p>Go to this url to face your opponent: <a ng-href="#/battle/{{ battleRoomHash }}">localhost:8000/#/battle/{{ battleRoomHash }}</a></p>
+        <p>Click this link to enter the battlefield and face your opponent: <a ng-href="#/battle/{{ battleRoomHash }}">localhost:8000/#/battle/{{ battleRoomHash }}</a></p>
       </div>
 
       <div class="dashboard-stats">
-        <h1 class="dashboard-stats__title">Welcome back, {{ username }}!</h1>
+        <h1 class="dashboard-stats__title">Ready to Battle, {{ username }}?!</h1>
 
         <div class="grid grid--l">
-          <div class="grid__item grid__item--25-l">
+        <div class="grid__item grid__item--20-l">
+          <div class="dashboard-stats-entry">
+            <h3 class="dashboard-stats-entry__title">Avatar</h3>
+            <div class="dashboard-stats-entry__body">
+              <p class="dashboard-stats-entry__stat"> <img class="char" src="{{avatar}}"/></p>
+            </div>
+            <div ng-show="toShowImagePreview">
+              <p>Preview</p>
+              <image id="pic" src="{{my.favorite.img}}" style="margin-top: 0px; width:100px; height:100px;"></image>
+            </div>
+
+            <select ng-model="my.favorite" ng-click="showImagePreviewFn()" ng-options="avatar.name for avatar in avatars">
+              <option value="">Select Avatar</option>
+            </select>
+            <button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="setAvatar()">Save</button>
+
+          </div>
+        </div>
+          <div class="grid__item grid__item--20-l">
             <div class="dashboard-stats-entry">
               <h3 class="dashboard-stats-entry__title">Current Streak</h3>
               <div class="dashboard-stats-entry__body">
@@ -27,7 +45,7 @@
               </div>
             </div>
           </div>
-          <div class="grid__item grid__item--25-l">
+          <div class="grid__item grid__item--20-l">
             <div class="dashboard-stats-entry">
               <h3 class="dashboard-stats-entry__title">Longest Streak</h3>
               <div class="dashboard-stats-entry__body">
@@ -35,7 +53,7 @@
               </div>
             </div>
           </div>
-          <div class="grid__item grid__item--25-l">
+          <div class="grid__item grid__item--20-l">
             <div class="dashboard-stats-entry">
               <h3 class="dashboard-stats-entry__title">All Time</h3>
               <div class="dashboard-stats-entry__body">
@@ -43,7 +61,7 @@
               </div>
             </div>
           </div>
-          <div class="grid__item grid__item--25-l">
+          <div class="grid__item grid__item--20-l">
             <div class="dashboard-stats-entry">
               <h3 class="dashboard-stats-entry__title">Problem Level</h3>
               <div class="dashboard-stats-entry__body">
@@ -52,6 +70,7 @@
                 <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="hard()">Crazy Hard</button></p>
                 <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="meh()">Meh</button></p>
                 <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="cake()">Cake</button></p>
+                <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="superNewb()">Super Newb Mode</button></p>
               </div>
 
             </div>
@@ -61,9 +80,9 @@
 
 
       <div class="grid grid--l">
-        <div class="grid__item grid__item--50-l">
-          <div class="dashboar-widget dashboard-leaderboard">
-            <h2 class="dashboar-widget__title">Leaderboard</h2>
+        <div class="grid__item grid__item--33-l">
+          <div class="dashboard-widget dashboard-leaderboard">
+            <h2 class="dashboard-widget__title">Leaderboard</h2>
              <ul class="dashboard-online__list">
               <li class="dashboard-online__item" ng-repeat="user in leaderboard">
                 <span>{{ user.username }}</span>
@@ -72,13 +91,26 @@
             </ul>
           </div><!-- /dashboar widget -->
         </div><!-- /grid item -->
-        <div class="grid__item grid__item--50-l">
+        <div class="grid__item grid__item--33-l">
           <div class="dashboar-widget dashboard-online">
             <h2 class="dashboar-widget__title">Online Now</h2>
             <ul class="dashboard-online__list">
               <li class="dashboard-online__item" ng-repeat="(key, value) in onlineUsers">
                 <span>{{ key }}</span>
-                <span><a href="#" ng-click="requestBattle($event, key)">Challenge?</a></span>
+                <span><a href="#" ng-click="requestBattle($event, key)" ng-hide="challengeClicked[key]">Challenge?</a></span>
+                <span class ="dashboard-online__challenged" ng-show="challengeClicked[key]">Player Challenged!</span>
+              </li>
+            </ul>
+          </div><!-- /dashboar widget -->
+        </div><!-- /grid item -->
+        <div class="grid__item grid__item--33-l">
+          <div class="dashboar-widget dashboard-friends">
+            <h2 class="dashboar-widget__title">Friends</h2>
+            <ul class="dashboard-online__list">
+              <li class="dashboard-online__item" ng-repeat="(key, value) in friends">
+                <span>{{ key }}</span>
+                <span><a href="#" ng-click="requestBattle($event, key)" ng-hide="challengeClicked[key]">Challenge?</a></span>
+                <span class ="dashboard-online__challenged" ng-show="challengeClicked[key]">Player Challenged!</span>
               </li>
             </ul>
           </div><!-- /dashboar widget -->
