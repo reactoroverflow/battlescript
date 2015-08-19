@@ -55,6 +55,19 @@ describe('User Model', function () {
     });
   });
 
+  it('should set the username to all lowercase', function (done) {
+    user.username = "UPPerCasE";
+    _user = new User(user);
+    _user.save(function (err) {
+      User.find({username: 'uppercase'}, function (err, users) {
+        expect(err).to.equal(null);
+        expect(users.length).to.equal(1);
+        expect(users[0].username).to.equal('uppercase');
+        done();
+      });
+    });
+  });
+
   it('should set default current streak if none set', function (done) {
     _user = new User(user);
     _user.save(function (err) {
@@ -169,6 +182,20 @@ describe('User Model', function () {
 
   it('should not be able to save another user with the save username', function (done) {
     _user = new User(user);
+    var _user2 = new User(user);
+    _user.save(function (err) {
+      expect(err).to.equal(null);
+      _user2.save(function (err) {
+        expect(err).to.not.equal(null);
+        done();
+      });
+    });
+  });
+
+  it('should not be able to save another user with the save username lowercase', function (done) {
+    user.username = "newUserName";
+    _user = new User(user);
+    user.username = "newusername";
     var _user2 = new User(user);
     _user.save(function (err) {
       expect(err).to.equal(null);
