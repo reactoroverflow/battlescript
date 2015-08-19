@@ -41,6 +41,8 @@
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.9",
     "karma-chrome-launcher": "^0.2.0",
-    "karma-jasmine": "^0.3.6"
+    "karma-jasmine": "^0.3.6",
+    "run-sequence": "^1.1.2",
+    "supertest": "^1.0.1"
   }
 }

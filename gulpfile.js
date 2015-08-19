@@ -15,8 +15,10 @@ var jshint = require('gulp-jshint');
 var karmaServer = require('karma').Server;
 var mocha = require('gulp-mocha');
 var minifyCSS = require('gulp-minify-css');
+var mongoose = require('mongoose');
 var nodemon = require('gulp-nodemon');
 var rename = require('gulp-rename');
+var runSequence = require('run-sequence');
 var sass = require('gulp-sass');
 
 //////////////////////////////////////////////////
@@ -67,12 +69,41 @@ gulp.task('watch', function() {
 });
 
 //////////////////////////////////////////////////
+// test tasks
+//////////////////////////////////////////////////
+
+gulp.task('test', function (done) {
+  runSequence('test:server', 'test:client', done);
+});
+
+gulp.task('test:server', function (done) {
+  runSequence('mongoose', 'mocha', 'mongooseStop', done);
+});
+
+gulp.task('test:client', function (done) {
+  runSequence('mongoose', 'karma', 'mongooseStop', done);
+});
+
+gulp.task('mongoose', function (done) {
+  mongoose.connect('mongodb://localhost/battlescript-test', function (err) {
+    mongoose.connection.db.dropDatabase(function (err) {
+      done();
+    });
+  });
+});
+
+gulp.task('mongooseStop', function () {
+  return mongoose.disconnect();
+});
+
+
+//////////////////////////////////////////////////
 // Server test task (mocha)
 //////////////////////////////////////////////////
 
 gulp.task('mocha', function () {
   return gulp.src('specs/server/**/*.test.server.js', {read: false})
-    .pipe(mocha({reporter: 'nyan'}));
+    .pipe(mocha({reporter: 'nyan', timeout: '10000'}));
 });
 
 //////////////////////////////////////////////////
