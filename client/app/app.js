@@ -7,6 +7,7 @@ angular.module('battlescript', [
   'battlescript.auth',
   'battlescript.home',
   'battlescript.dashboard',
+  'battlescript.settings',
   'battlescript.battle',
   'ui.router',
   'ngSanitize'
@@ -42,6 +43,12 @@ angular.module('battlescript', [
       url: '/dashboard',
       templateUrl: 'app/dashboard/dashboard.html',
       controller: 'DashboardController',
+      authenticate: true
+    })
+    .state('settings', {
+      url: '/settings',
+      templateUrl: 'app/settings/settings.html',
+      controller: 'SettingsController',
       authenticate: true
     })
     .state('battleroom', {
@@ -133,7 +140,44 @@ angular.module('battlescript', [
 // run the style
 ////////////////////////////////////////////////////////////
 
-.run(function ($rootScope, $location, Auth, Users, Socket) {
+.run(function ($rootScope, $window, $location, Auth, Users, Socket) {
+
+////////////////////////////////////////////////////////////
+// Facebook auth init
+////////////////////////////////////////////////////////////
+
+  $rootScope.user = {};
+
+  $window.fbAsyncInit = function() {
+    // Executed when the SDK is loaded
+    FB.init({ 
+      appId: '948893565174149', 
+      channelUrl: 'auth/channel.html', /* Adding a Channel File improves the performance of the javascript SDK */
+      status: true,   /* Set if you want to check the authentication status at the start up of the app */
+      cookie: true,   /* Enable cookies to allow the server to access the session */
+      xfbml: true,    /* Parse XFBML */
+      version: 'v2.4'
+    });
+  };
+
+  (function(d){
+    // load the Facebook javascript SDK
+    var js, 
+    id = 'facebook-jssdk', 
+    ref = d.getElementsByTagName('script')[0];
+
+    if (d.getElementById(id)) {
+      return;
+    }
+
+    js = d.createElement('script'); 
+    js.id = id; 
+    js.async = true;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+
+    ref.parentNode.insertBefore(js, ref);
+  }(document));
+
 
   ////////////////////////////////////////////////////////////
   // dashboard sockets

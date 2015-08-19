@@ -1,0 +1,28 @@
+.settings__title {
+  padding: 12px;
+  color: #fff;
+  background-color: #EB7F00;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.settings__input {
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  border: none;
+  box-shadow: none;
+  border-radius: 0px;
+  height: 30px;
+  width: 275px;
+}
+
+.settings__title__bold {
+  margin: 0;
+  padding: 0;
+  color: #555;
+  font-weight: 700;
+  line-height: 1.2;
+  font-size: 30px;
+}
