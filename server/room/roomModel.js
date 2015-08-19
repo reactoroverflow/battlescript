@@ -34,24 +34,21 @@ var updateRooms = function(room){
 };
 
 var getOpenRoom = function(){
-  console.log("STORAGE: ", rooms.storage);
+  //console.log("STORAGE: ", rooms.storage);
   for (var id in rooms.storage) {
     if (rooms.storage[id].needsMember()){
-      console.log("FOUND A 1-PERSON ROOM");
+      //console.log("FOUND A 1-PERSON ROOM");
       return rooms.storage[id];
     }
   }
-  console.log("DIDNT FIND A SUITABLE ROOM");
+  //console.log("DIDNT FIND A SUITABLE ROOM");
   return null;
 };
 
 var removeRoom = function(id){
-  console.log("DELETING ROOM");
+  //console.log("DELETING ROOM");
   delete rooms.storage[id];
-};
-
-var checkForRoomWithHash = function(roomhash){
-  // if (rooms.storage.[roomhash]) 
+  rooms.roomCount--;
 };
 
 // check if room with roomhash id has already been created
