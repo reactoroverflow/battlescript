@@ -32,5 +32,13 @@ angular.module('battlescript.settings', [])
       }
     );
   };
+
+  $scope.getFriends = function() {
+    facebookService.getFriends() 
+      .then(function(response) {
+        $scope.fbFriends = response;
+      }
+    );
+  };
   
 });
