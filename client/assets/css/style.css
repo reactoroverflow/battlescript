@@ -75,7 +75,7 @@ h5,
 h6 {
   margin: 0;
   padding: 0;
-  color: #BEB5B4;
+  color: #3F5765;
   font-weight: 700;
   line-height: 1.2;
 }
@@ -141,8 +141,10 @@ button {
 
 input:focus,
 textarea:focus,
+
 button:focus {
-  outline: none;
+    background-color: #2B3A42;
+    border: 2px solid red;
 }
 
 /* -----------------------------------------------------------------------------
@@ -290,7 +292,6 @@ button:focus {
             flex: 0 0 25%;
   }
   .grid__item--33-l {
-    background-color: black;
     -webkit-box-flex: 0;
     -webkit-flex: 0 0 33.3333%;
         -ms-flex: 0 0 33.3333%;
@@ -428,7 +429,7 @@ button:focus {
  */
 .header-main {
   padding: 12px 0;
-  background-color: #BEB5B4;
+  background-color: #5B5354;
 }
 
 .header-main__inner {
@@ -567,8 +568,8 @@ button:focus {
 ----------------------------------------------------------------------------- */
 .main {
   padding: 48px 0;
-  background-color: #351D1D;
-  background-image: url("/assets/img/weapon_keyboard_50.png");
+  background-color: #DBD1D2;
+  /*background-image: url("/assets/img/weapon_keyboard_50.png");*/
   background-repeat: no-repeat;
   background-size: 60%;
   background-position: right;
@@ -727,14 +728,14 @@ button:focus {
 .dashboard-stats-entry__title {
   padding: 12px;
   color: #fff;
-  background-color: #DC1616;
+  background-color: #5B5354;
   font-size: 12px;
   font-weight: 400;
 }
 
 .dashboard-stats-entry__body {
   padding: 12px;
-  background-color: #0A0909;
+  background-color: #D0C7C8;
 }
 
 .dashboard-stats-entry__stat > span {
@@ -1264,4 +1265,8 @@ button:focus {
 
 .collab {
   overflow: auto;
+}
+
+.sel {
+  width:214.4px;
 }

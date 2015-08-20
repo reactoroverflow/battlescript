@@ -30,8 +30,8 @@
               <image id="pic" src="{{my.favorite.img}}" style="margin-top: 0px; width:100px; height:100px;"></image>
             </div>
 
-            <select ng-model="my.favorite" ng-click="showImagePreviewFn()" ng-options="avatar.name for avatar in avatars">
-              <option value="">Select Avatar</option>
+            <select class="sel" ng-model="my.favorite" ng-click="showImagePreviewFn()" ng-options="avatar.name for avatar in avatars">
+              <option value="">Select Your Player's Avatar</option>
             </select>
             <button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="setAvatar()">Save</button>
 
@@ -69,7 +69,7 @@
                 <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="nightmare()">Nightmare</button></p>
                 <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="hard()">Crazy Hard</button></p>
                 <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="meh()">Meh</button></p>
-                <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="cake()">Cake</button></p>
+                <p class="dashboard-stats-entry__stat"><button autofocus class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="cake()">Cake</button></p>
                 <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="superNewb()">Super Newb Mode</button></p>
               </div>
 
@@ -99,6 +99,7 @@
                 <span>{{ key }}</span>
                 <span><a href="#" ng-click="requestBattle($event, key)" ng-hide="challengeClicked[key]">Challenge?</a></span>
                 <span class ="dashboard-online__challenged" ng-show="challengeClicked[key]">Player Challenged!</span>
+                <span><a href="#" ng-click="requestColab($event, key)" ng-hide="challengeClicked[key]">Collaborate?</a></span>
               </li>
             </ul>
           </div><!-- /dashboar widget -->
@@ -111,6 +112,7 @@
                 <span>{{ key }}</span>
                 <span><a href="#" ng-click="requestBattle($event, key)" ng-hide="challengeClicked[key]">Challenge?</a></span>
                 <span class ="dashboard-online__challenged" ng-show="challengeClicked[key]">Player Challenged!</span>
+                <span><a href="#" ng-click="requestColab($event, key)" ng-hide="challengeClicked[key]">Collaborate?</a></span>
               </li>
             </ul>
           </div><!-- /dashboar widget -->

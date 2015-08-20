@@ -100,13 +100,13 @@ angular.module('battlescript.dashboard', [])
     'img': 'http://s3.picofile.com/file/7819333759/large2.gif',
     'name': 'Arya'
     }, {
-    'img': 'http://1.bp.blogspot.com/_d3i3RAv23H8/S0UhYVRckxI/AAAAAAAAAa8/p5n7cm9Ykho/s400/nerd.png',
+    'img': 'http://www.discordia.com.au/wp-content/uploads/2012/10/weapon_keyboard__by_slayeroflight1307-d5cxhj5.png',
     'name': 'Varys'
     }, {
     'img': 'http://fc00.deviantart.net/fs70/i/2011/087/1/3/young_nerd_by_costalonga-d3co1j3.png',
     'name': 'Samwell'
     }, {
-    'img': 'http://24.media.tumblr.com/tumblr_m3xg9fFpvu1rnsy7to1_500.png',
+    'img': 'http://vignette3.wikia.nocookie.net/mafiawars/images/4/4a/Huge_item_keyboardwarrior_bronze_01.png/revision/latest?cb=20121126091224',
     'name': 'Joffrey'
     }, {
     'img': 'http://orig15.deviantart.net/33d6/f/2011/058/e/1/hello_kitty_nerd_by_ladypinkilicious-d3ajpii.png',
