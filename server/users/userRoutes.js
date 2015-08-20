@@ -12,6 +12,8 @@ module.exports = function (app) {
   app.post('/statchange', userController.statChange);
   app.post('/avatarchange', userController.avatarChange);
   app.get('/leaderboard', userController.leaderboard);
+  app.post('/pointschange', userController.pointsChange);
+
 
 
 };

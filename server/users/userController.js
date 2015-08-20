@@ -118,6 +118,7 @@ module.exports = {
           totalWins: user.totalWins,
           currentStreak: user.currentStreak,
           longestStreak: user.longestStreak,
+          totalPoints: user.totalPoints,
           avatar: user.avatar
         });
       });
@@ -153,6 +154,16 @@ module.exports = {
         // console.log("user === ", user);
         user.save();
       });
+  },
+  
+  pointsChange: function(req, res, next) {
+    var findUser = Q.nbind(User.findOne, User);
+    findUser({username: req.body.username})
+      .then(function (user) {
+        user.totalPoints += req.body.pointIncrease;          
+        user.save();
+      })
+      res.end();
   },
 
   leaderboard: function(req, res, next){

@@ -4,7 +4,6 @@ module.exports = function(socket, io){
   var username = socket.handshake.query.username;
   var roomhash = socket.handshake.query.roomhash;
 
-
   var joinedRoom = roomModel.createOrGetRoom(roomhash);
 
   if (joinedRoom === null) {
@@ -26,8 +25,15 @@ module.exports = function(socket, io){
 
     socket.on('winnerFound', function(){
       socket.broadcast.to(joinedRoom.id).emit('opponentWon');
-    })
+    });
+
+    socket.on('powerBlurifySent', function() {
+      socket.broadcast.to(joinedRoom.id).emit('powerBlurifyReceived');
+    });
     
+    socket.on('powerJumblifySent', function() {
+      socket.broadcast.to(joinedRoom.id).emit('powerJumblifyReceived');
+    });
     // I catch the disconnected client. What I do is 'remove' the memeber from the room
     // I also delete it if there are no people in the room
     // and save it if ppl remain.

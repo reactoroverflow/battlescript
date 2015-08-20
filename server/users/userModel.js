@@ -37,6 +37,11 @@ var UserSchema = new mongoose.Schema({
   totalWins: {
     type: Number,
     default: 0
+  },
+
+  totalPoints: {
+    type: Number,
+    default: 0
   }
 });
 

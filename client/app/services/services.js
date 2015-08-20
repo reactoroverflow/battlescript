@@ -51,9 +51,6 @@ angular.module('battlescript.services', [])
     $window.localStorage.setItem('username', undefined);
     $window.localStorage.removeItem('battlepro');
     $location.path('/signin');
-
-    // console.log('this is user!!!', user)
-    // console.log('inside signout factory')
     
     return $http({
       method: 'POST',
@@ -96,7 +93,7 @@ angular.module('battlescript.services', [])
     return $http({
       method: 'GET',
       url: '/api/users/stats',
-      params: {username: username}
+      params: {username: username}  
     }).then(function(res) {
       return res.data;
     });
@@ -120,6 +117,15 @@ angular.module('battlescript.services', [])
     });
   };
 
+  var pointsChange = function(username, pointIncrease) {
+    // console.log(username, pointIncrease);
+    return $http({
+      method: 'POST',
+      url: '/api/users/pointschange',
+      data: {username: username, pointIncrease: pointIncrease}
+    });
+  };
+
   var getLeaderboard = function(){
     return $http({
       method: 'GET',
@@ -131,10 +137,10 @@ angular.module('battlescript.services', [])
     getAuthUser: getAuthUser,
     getStats: getStats,
     statChange: statChange,
+    pointsChange: pointsChange,
     avatarChange: avatarChange,
     getLeaderboard: getLeaderboard
   };
-
 })
 
 ////////////////////////////////////////////////////////////
