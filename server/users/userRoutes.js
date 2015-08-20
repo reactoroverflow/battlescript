@@ -9,10 +9,13 @@ module.exports = function (app) {
   app.get('/signedin', userController.checkAuth);
   app.post('/signout', userController.signout);
   app.get('/stats', userController.stats);
+  app.get('/getfriend', userController.getUsernameFromFbId);
+  app.post('/setfriend', userController.setFriend);
   app.post('/statchange', userController.statChange);
   app.post('/avatarchange', userController.avatarChange);
   app.get('/leaderboard', userController.leaderboard);
   app.post('/pointschange', userController.pointsChange);
+  app.post('/setfbid', userController.setFbId);
 
 
 

@@ -20,7 +20,7 @@ angular.module('battlescript.settings', [])
   $scope.getUserID = function() {
     facebookService.getUserID() 
       .then(function(response) {
-        $scope.user_ID = response;
+        return response;
       }
     );
   };
@@ -36,9 +36,38 @@ angular.module('battlescript.settings', [])
   $scope.getFriends = function() {
     facebookService.getFriends() 
       .then(function(response) {
-        $scope.fbFriends = response;
+        // $rootScope.fbFriends = response;
+        return response;
       }
     );
+  };
+
+  $scope.doAllTheThings = function() {
+    // console.log("I AM IN DOALLTHETHINGS!");
+    facebookService.getUserID() 
+      .then(function(response) {
+        // console.log(response);
+        Users.setFbId($scope.username, response)
+          .then(function() {
+            // console.log("After the second .thennnnnnnnnNn");
+            facebookService.getFriends() 
+              .then(function(response) {
+                _.each(response, function(user) {
+                  // console.log("EACH USER: ===> ", user)
+                  Users.getFriendUsername(user.id)
+                    .then(function(res) {
+                      // console.log("res.data.username", res.data.username);
+                      //send this username into friends array of user
+                      Users.setFriend($scope.username, res.data.username)
+                        .then(function(res) {
+                          // console.log("res from setFriend", res);
+                        });
+                    });
+                });
+              });
+          });
+      });
+
   };
   
 });
