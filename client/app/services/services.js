@@ -321,10 +321,23 @@ angular.module('battlescript.services', [])
     return deferred.promise;
   };
 
+  var getFriends = function() {
+    var deferred = $q.defer();
+    FB.api('/me/friends', function(response) {
+      if (!response || response.error) {
+        deferred.reject('Error occured');
+      } else {
+        deferred.resolve(response.data);
+      }
+    });
+    return deferred.promise;
+  };
+
   return {
     getMyLastName: getMyLastName,
     getUserID: getUserID,
-    getUserImg: getUserImg
+    getUserImg: getUserImg,
+    getFriends: getFriends
   };
 
 });

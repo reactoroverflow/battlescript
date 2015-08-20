@@ -13,19 +13,15 @@
           <div class="dashboard-stats-entry">
             <h2 class="settings__title">Change password</h2>
             <div class="dashboard-stats-entry__body">
-              <label for="currentPassword">Enter your current password</label>
-              </br>
-              <input name="currentPassword" class="settings__input"></input>
-              </br>
-              </br>
-              <label for="newPassword">Enter the new password</label>
+              <label for="newPassword">Enter new password</label>
               </br>
               <input name="newPassword" class="settings__input"></input>
               </br>
               </br>
-              <label for="confirmPassword">Confirm the new password</label>
+              <label for="confirmPassword">Confirm new password</label>
               </br>
               <input name="confirmPassword" class="settings__input"></input>
+              </br>
               </br>
               <button>Submit</button>
             </div>
@@ -40,6 +36,7 @@
               </br>
               <input name="email" class="settings__input"></input>
               </br>
+              </br>
               <button>Submit</button>
             </div>
           </div>
@@ -47,9 +44,10 @@
           <div class="dashboard-stats-entry">
             <h2 class="settings__title">Add Phone Number</h2>
             <div class="dashboard-stats-entry__body">
-              <label for="phone">Enter an Email Address</label>
+              <label for="phone">Enter a Phone Number</label>
               </br>
               <input name="phone" class="settings__input"></input>
+              </br>
               </br>
               <button>Submit</button>
             </div>
@@ -59,7 +57,10 @@
 
       </div>
       </br>
-      <fb:login-button size="large" >Find Friends with Facebook</fb:login-button>
+      <fb:login-button size="large" scope="public_profile, user_friends, email">Find Friends with Facebook</fb:login-button>
+      <button ng-click="getFriends()">FIND FRIENDS</button>
+
+      <div>{{fbFriends}}</div>
 
     </div><!-- dashboard -->
   </div><!-- /container -->
