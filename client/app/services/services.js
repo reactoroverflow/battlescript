@@ -270,4 +270,55 @@ angular.module('battlescript.services', [])
     makeEditor: makeEditor
   };
 
+})
+
+
+.factory('facebookService', function($q) {
+
+  var getMyLastName = function() {
+    var deferred = $q.defer();
+    FB.api('/me', {
+      fields: 'last_name'
+    }, function(response) {
+      if (!response || response.error) {
+        deferred.reject('Error occured');
+      } else {
+        deferred.resolve(response);
+      }
+    });
+    return deferred.promise;
+  };
+
+  var getUserID = function() {
+    var deferred = $q.defer();
+    FB.api('/me', {
+      fields: 'id'
+    }, function(response) {
+      if (!response || response.error) {
+        deferred.reject('Error occured');
+      } else {
+        deferred.resolve(response.id);
+      }
+    });
+    return deferred.promise;
+  };
+
+  var getUserImg = function(userID) {
+    var deferred = $q.defer();
+    FB.api('/' + userID + '/picture', function(response) {
+      if (!response || response.error) {
+        deferred.reject('Error occured');
+      } else {
+        deferred.resolve(response.data.url);
+      }
+    });
+    return deferred.promise;
+  };
+
+  return {
+    getMyLastName: getMyLastName,
+    getUserID: getUserID,
+    getUserImg: getUserImg
+  };
+
 });
