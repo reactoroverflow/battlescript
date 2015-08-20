@@ -14,7 +14,7 @@ angular.module('battlescript.auth', [])
       })
       .catch(function (error) {
         $scope.message = "Invalid Username or Password";
-        console.error(error);
+        //console.error(error);
       });
   };
 
@@ -26,23 +26,23 @@ angular.module('battlescript.auth', [])
       })
       .catch(function (error) {
         $scope.message = "Username Already Taken";
-        console.error(error);
+        //console.error(error);
       });
   };
 
   $scope.logout = function() {
-    console.log('calling log out');
+    //console.log('calling log out');
     $scope.user.username = $window.localStorage.getItem('username');
-    console.log("inside log out ", $scope.user)
+    //console.log("inside log out ", $scope.user)
     Auth.signout($scope.user)
     .then(function (token){    
-      console.log('inside then: im signing out') 
+      //console.log('inside then: im signing out') 
       $window.localStorage.removeItem('battlepro');
       $location.path('/signin');
     })
     .catch(function (error) {
         $scope.message = "Username Not Found";
-        console.error(error);
+        //console.error(error);
     });
   };
 });
