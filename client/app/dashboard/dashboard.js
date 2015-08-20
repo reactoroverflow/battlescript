@@ -1,6 +1,6 @@
 angular.module('battlescript.dashboard', [])
 
-.controller('DashboardController', function ($scope, $rootScope, $timeout, Dashboard, Users, Battle) {
+.controller('DashboardController', function ($scope, $rootScope, $timeout, Dashboard, Users, Battle, Collab) {
   // get current auth username
   $scope.username = Users.getAuthUser();
 
@@ -39,6 +39,7 @@ angular.module('battlescript.dashboard', [])
   $scope.totalPoints = 0;
   $scope.leaderboard = [];
   $scope.challengeClicked = {};
+  $scope.collaborateClicked = {};
 
   ////////////////////////////////////////////////////////////
   // sets up all the dashboard stuff here
@@ -59,6 +60,22 @@ angular.module('battlescript.dashboard', [])
 
   // Set up a unique hash for battling.
   $scope.battleRoomHash;
+
+  // this defaults to false, because when the page first loads, there is 
+  // no battle request for the logged in user
+  $scope.userHasCollabRequest = false;
+
+  // battle request status can be 'none', 'open', or 'init'. it defaults
+  // to none, changes to open when a request is first sent, and changes to
+  // init if the user accepts/declines the battle request.
+  $scope.collabRequestStatus = 'none';
+
+  // this defaults to null, because by default, no opponents have challenged
+  // the logged in user
+  $scope.collabRequestOpponentName = null;
+
+  // Set up a unique hash for battling.
+  $scope.collabRoomHash;
 
   ////////////////////////////////////////////////////////////
   // set up online users
@@ -173,6 +190,71 @@ angular.module('battlescript.dashboard', [])
   };
 
   $scope.getLeaderboard();
+
+  ////////////////////////////////////////////////////////////
+  // handle collaboration requests
+  ////////////////////////////////////////////////////////////
+
+  // Open up socket with specific dashboard server handler
+  $scope.requestCollab = function($event, opponentUsername) {
+    $event.preventDefault();
+    $scope.collaborateClicked[opponentUsername] = true;
+    if (!$scope.challengeLevel) $scope.challengeLevel = 4 + Math.floor(Math.random()*2);
+    // console.log("CHALLENGE LEVEL: ", $scope.challengeLevel);
+
+
+    // now, we need to emit to the socket
+    $rootScope.dashboardSocket.emit('outgoingCollabRequest', {
+      fromUser: $scope.username,  // request from the logged in user
+      toUser: opponentUsername,    // request to the potential opponent
+      challengeLevel: $scope.challengeLevel
+    });
+  };
+
+  // listen for incoming collab request
+  $rootScope.dashboardSocket.on('incomingCollabRequest', function(userData){
+    $scope.collabRequestOpponentName = userData.fromUser;
+    $scope.collabRequestChallengeLevel = userData.challengeLevel;
+    $scope.userHasCollabRequest = true;
+    $scope.collabRequestStatus = 'open';
+    $scope.$apply();
+  });
+
+  // collab has been accepted
+  $scope.collabAccepted = function() {
+    // console.log("CHALLENGE ACCEPTED, CHALLENGE LEVEL: ", $scope.battleRequestChallengeLevel);
+    // need to somehow notify challenger that the battle has been accepted
+    $rootScope.dashboardSocket.emit('collabAccepted', {
+      user: $scope.username,                      // the user who accepted the battle
+      opponent: $scope.collabRequestOpponentName,  // the opponent needs to be notified
+      challengeLevel: $scope.collabRequestChallengeLevel
+    });
+  };
+
+  // collab has been declined
+  $scope.collabDeclined = function() {
+    // Reset everything :)
+    $scope.userHasCollabRequest = false;
+    $scope.collabRequestStatus = 'none';
+  };
+
+  $rootScope.dashboardSocket.on('prepareForCollab', function(data) {
+    // at this point, the opponent (i.e. the person who sent the initial battle
+    // request) should be notified that the person he/she challenged has
+    // accepted.
+    // console.log('prepare for battle!', data);
+
+    $scope.collabRoomHash = data.roomhash;
+
+    // a notification should pop up on both screens
+    $scope.userHasCollabRequest = true;
+    $scope.collabRequestStatus = 'init';
+    $scope.$apply();
+    
+    // the url hash needs to also be sent to the player who accepted the
+    // challenge
+  });
+
 
   ////////////////////////////////////////////////////////////
   // handle battle requests

@@ -9,6 +9,7 @@ angular.module('battlescript', [
   'battlescript.dashboard',
   'battlescript.settings',
   'battlescript.battle',
+  'battlescript.collab',
   'ui.router',
   'ngSanitize'
 ])
@@ -55,6 +56,12 @@ angular.module('battlescript', [
       url: '/battle/:id',
       templateUrl: 'app/battle/battle.html',
       controller: 'BattleController',
+      authenticate: true
+    })
+    .state('collabroom', {
+      url: '/collab/:id',
+      templateUrl: 'app/collab/collab.html',
+      controller: 'CollabController',
       authenticate: true
     });
 
@@ -134,6 +141,18 @@ angular.module('battlescript', [
     restrict: 'E',
     templateUrl: 'app/directives/footer.html'
   };
+})
+
+// live updates the css styling in collab.html
+.directive('parseStyle', function($interpolate) {
+    return function(scope, elem) {
+        var exp = $interpolate(elem.html()),
+            watchFunc = function () { return exp(scope); };
+        
+        scope.$watch(watchFunc, function (html) {
+            elem.html(html);
+        });
+    };
 })
 
 ////////////////////////////////////////////////////////////
@@ -260,6 +279,56 @@ angular.module('battlescript', [
     // listen for socket disconnection
     $rootScope.battleSocket.on('disconnect', function() {
       // console.log('battle socket disconnected');
+    });
+
+    // run the callback
+    cb();
+  };
+
+
+  ////////////////////////////////////////////////////////////
+  // battle sockets
+  ////////////////////////////////////////////////////////////
+
+  $rootScope.collabSocket;
+
+  $rootScope.initCollabSocket = function(roomhash, cb) {
+    
+    // still check here
+    if (Auth.isAuth() /* && !$rootScope.battleSocket */) {
+      // now time to set up the battle socket
+      $rootScope.collabSocket = Socket.createSocket('collab', [
+        'username=' + Users.getAuthUser(),
+        'handler=collab',
+        'roomhash=' + roomhash
+      ]);
+
+      $rootScope.collabSocket.on('connect', function() {
+        $rootScope.initCollabSocketEvents(cb);
+      });
+    }
+  };
+
+  // initialise dash socket events
+  $rootScope.initCollabSocketEvents = function(cb) {
+    // console.log('init the collab events');
+    // state change and socket handling
+    $rootScope.$on('$stateChangeStart', function(evt, next, current) {
+      if (next.name !== 'collabroom') {
+        $rootScope.collabSocket.emit('disconnectedClient', {username: Users.getAuthUser()});
+        $rootScope.collabSocket.disconnect();
+      }
+    });
+
+    // refresh handler
+    window.onbeforeunload = function(e) {
+      $rootScope.collabSocket.emit('disconnectedClient', {username: Users.getAuthUser()});
+      $rootScope.collabSocket.disconnect();
+    };
+
+    // listen for socket disconnection
+    $rootScope.collabSocket.on('disconnect', function() {
+      // console.log('collab socket disconnected');
     });
 
     // run the callback

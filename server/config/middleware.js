@@ -7,6 +7,8 @@ module.exports = function (app, express) {
   var userRouter = express.Router();
   var duelRouter = express.Router();
   var battleRouter = express.Router();
+  var collabRouter = express.Router();
+  var collabingRouter = express.Router();
 
   // express middlewars
   app.use(morgan('dev'));
@@ -18,7 +20,9 @@ module.exports = function (app, express) {
   app.use('/api/users', userRouter);
   app.use('/api/duels', duelRouter);
   app.use('/api/battles', battleRouter);
-  
+  app.use('/api/collab', collabRouter);
+  app.use('/api/collabs', collabingRouter);
+ 
   // authentication middleware used to decode token and made available on the request
   app.use(helpers.errorLogger);
   app.use(helpers.errorHandler);
@@ -27,4 +31,7 @@ module.exports = function (app, express) {
   require('../users/userRoutes.js')(userRouter);
   require('../duels/duelRoutes.js')(duelRouter);
   require('../battles/battleRoutes.js')(battleRouter);
+  require('../collab/collabRoutes.js')(collabRouter);
+  require('../collabing/collabingRoutes.js')(collabingRouter);
+
 };

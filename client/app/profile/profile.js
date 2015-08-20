@@ -1,6 +1,6 @@
 angular.module('battlescript.dashboard', [])
 
-.controller('DashboardController', function ($scope, $rootScope, $timeout, Dashboard, Users, Battle) {
+.controller('DashboardController', function ($scope, $rootScope, $timeout, Dashboard, Users, Battle, Collab) {
   // get current auth username
   $scope.username = Users.getAuthUser();
 

@@ -1,12 +1,47 @@
-angular.module('battlescript.battle', [])
+angular.module('battlescript.collab', [])
 
-.controller('BattleController', function($rootScope, $scope, $timeout, $location, $stateParams, Users, Battle, Collab, Editor) {
+.controller('CollabController', function($rootScope, $scope, $timeout, $location, $stateParams, Users, Collab, Battle, Editor) {
   $scope.username = Users.getAuthUser();
+
+  // $scope.toDisplayCursor = 'none';    
+
+  // $scope.setCursorPlace = function(partnerCursorCoords) {
+  //   // $scope.$apply(function() {    
+  //   //   $scope.setCursorCoordsTop = partnerCursorCoords.cursorCoords.top - 10 + 'px';
+  //   //   $scope.setCursorCoordsLeft = partnerCursorCoords.cursorCoords.left - 2 + 'px';
+  //   //   $scope.toDisplayCursor = 'block';    
+  //   // });
+  //   // $scope.userEditor.replaceRange('', partnerCursorCoords.cursorPosition);
+  // }
+  
+  $scope.sendUserTextChangeSocketSignal = function() {
+    $scope.userEditorProperties = {
+      // cursorCoords: $scope.userEditor.cursorCoords(), 
+      editorValue: $scope.userEditor.getValue(), 
+      cursorPosition: $scope.userEditor.getCursor()
+    };
+    $rootScope.collabSocket.emit('userTextChange', $scope.userEditorProperties);
+  };
 
   ////////////////////////////////////////////////////////////
   // jQuery function
   ////////////////////////////////////////////////////////////
   jQuery(function($){
+    $('body').keydown(function() {
+      setTimeout(function() {
+        $scope.sendUserTextChangeSocketSignal();
+        $scope.thisUserCursorPosition = $scope.userEditor.getCursor();
+        // console.log($scope.thisUserCursorPosition);
+      }, 1);
+    });
+
+    $('body').click(function() {
+      setTimeout(function() {
+        $scope.thisUserCursorPosition = $scope.userEditor.getCursor();
+        // console.log($scope.thisUserCursorPosition);
+        // $scope.sendUserTextChangeSocketSignal();
+      }, 1);
+    }); 
 
     $("#blurify__button").hover(function() {
       if($scope.totalPoints < 10) {
@@ -55,6 +90,10 @@ angular.module('battlescript.battle', [])
 
   });
 
+
+
+
+
   ////////////////////////////////////////////////////////////
   // Displays insufficient point error message
   ////////////////////////////////////////////////////////////
@@ -97,22 +136,22 @@ angular.module('battlescript.battle', [])
   $scope.spinnerOn = true;
 
   ////////////////////////////////////////////////////////////
-  // check first to see if valid battle room id
+  // check first to see if valid collab room id
   ////////////////////////////////////////////////////////////
 
-  $scope.battleRoomId = $stateParams.id;
-  $scope.battleInitialized = false;
+  $scope.collabRoomId = $stateParams.id;
+  $scope.collabInitialized = false;
 
-  Battle.isValidBattleRoom($scope.battleRoomId)
+  Collab.isValidCollabRoom($scope.collabRoomId)
   .then(function(valid) {
     if (valid) {
-      // if we have a valid battle room, then do this
-      $rootScope.initBattleSocket($scope.battleRoomId, function() {
-        // initialize battle socket events
-        $scope.initBattle();
+      // if we have a valid collab room, then do this
+      $rootScope.initCollabSocket($scope.collabRoomId, function() {
+        // initialize collab socket events
+        $scope.initCollab();
       });
     } else {
-      // redirect to dashboard if battle id not valid
+      // redirect to dashboard if collab id not valid
       $location.path('/dashboard');
     }
   })
@@ -136,17 +175,17 @@ angular.module('battlescript.battle', [])
   // set up opponent states
   $scope.opponentReadyState = false;
   $scope.opponentReadyClass = '';
-  $scope.opponentReadyText = 'Waiting on opponent';
+  $scope.opponentReadyText = 'Waiting on partner';
 
 
 
 
 
   ////////////////////////////////////////////////////////////
-  // initialize the battle
+  // initialize the collab
   // 
   // this, importantly, needs to be set up here after the
-  // battle socket itself has been initialized and set up
+  // collab socket itself has been initialized and set up
   // above.
   // 
   // unlike the updateUserReadyState function, this works
@@ -154,16 +193,16 @@ angular.module('battlescript.battle', [])
   // the socket to be initialized in the first place.
   ////////////////////////////////////////////////////////////
 
-  $scope.initBattle = function() {
+  $scope.initCollab = function() {
     // calls the function immediately, in case of refresh
     $scope.ifBothPlayersReady();
 
     // now listen for events
-    $rootScope.battleSocket.on('opponentReady', function(opponent) {
+    $rootScope.collabSocket.on('opponentReady', function(opponent) {
       if ($scope.opponentReadyState === false) {
         $scope.opponentReadyState = true;
         $scope.opponentReadyClass = 'active';
-        $scope.opponentReadyText = 'Ready for battle!';
+        $scope.opponentReadyText = 'Ready to collaborate!';
         $scope.opponent = opponent;
         $scope.ifBothPlayersReady();
       } else {
@@ -171,8 +210,8 @@ angular.module('battlescript.battle', [])
       }
     });
 
-    $rootScope.battleSocket.on('nameReq', function(){
-      $rootScope.battleSocket.emit('nameSend', $scope.user);
+    $rootScope.collabSocket.on('nameReq', function(){
+      $rootScope.collabSocket.emit('nameSend', $scope.user);
     });
   };
 
@@ -189,8 +228,8 @@ angular.module('battlescript.battle', [])
     if ($scope.userReadyState === false) {
       $scope.userReadyState = true;
       $scope.userReadyClass = 'active';
-      $scope.userReadyText = 'Ready for battle!';
-      $rootScope.battleSocket.emit('userReady', $scope.user);
+      $scope.userReadyText = 'Ready for collab!';
+      $rootScope.collabSocket.emit('userReady', $scope.user);
       $scope.ifBothPlayersReady();
     }
   };
@@ -206,25 +245,25 @@ angular.module('battlescript.battle', [])
   ////////////////////////////////////////////////////////////
   
   $scope.ifBothPlayersReady = function() {
-    if ($scope.userReadyState && $scope.opponentReadyState || window.localStorage.getItem('battleInitiated-' + $scope.battleRoomId)) {
+    if ($scope.userReadyState && $scope.opponentReadyState || window.localStorage.getItem('collabInitiated-' + $scope.collabRoomId)) {
 
-      // If battle has already been initiated, set user and opponent ready state to true
+      // If collab has already been initiated, set user and opponent ready state to true
       // so that waiting screen will not show
-      if (window.localStorage.getItem('battleInitiated-' + $scope.battleRoomId)){
+      if (window.localStorage.getItem('collabInitiated-' + $scope.collabRoomId)){
         $scope.userReadyState = true;
         $scope.opponentReadyState = true;
-        $rootScope.battleSocket.emit('getOpponent');
+        $rootScope.collabSocket.emit('getOpponent');
       } else {
-        // Save battle initiated to local storage: this will allow battle to reload automatically
-        // if user refreshes page, or comes back to battle after leaving accidentally
-        window.localStorage.setItem('battleInitiated-' + $scope.battleRoomId, true);
+        // Save collab initiated to local storage: this will allow collab to reload automatically
+        // if user refreshes page, or comes back to collab after leaving accidentally
+        window.localStorage.setItem('collabInitiated-' + $scope.collabRoomId, true);
       }
       
-      $scope.setUpBattle();
+      $scope.setUpCollab();
     } else {
-      // show the battle waiting area
+      // show the collab waiting area
       $scope.spinnerOn = false;
-      $scope.showBattleWaitingArea = true;
+      $scope.showCollabWaitingArea = true;
       if (!$scope.$$phase) $scope.$apply();
     }
   };
@@ -234,38 +273,36 @@ angular.module('battlescript.battle', [])
 
 
   ////////////////////////////////////////////////////////////
-  // set up the battle here
+  // set up the collab here
   ////////////////////////////////////////////////////////////
 
-  $scope.setUpBattle = function() {
+  $scope.setUpCollab = function() {
     $scope.spinnerOn = true;
     if (!$scope.$$phase) $scope.$apply();
     
     // set up both editors
     $scope.userEditor = Editor.makeEditor('#editor--user', false);
-    $scope.opponentEditor = Editor.makeEditor('#editor--opponent', true);
+    // $scope.opponentEditor = Editor.makeEditor('#editor--opponent', true);
     $scope.handleEditorEvents();
 
     // set up various fields
     $scope.userButtonAttempt = 'Attempt Solution';
     $scope.userNotes = 'Nothing to show yet...';
 
-    // get the battle
-    $scope.getBattle();
+    // get the collab
+    $scope.getCollab();
   };
 
   ////////////////////////////////////////////////////////////
   // handle power(jumblify) events
   ////////////////////////////////////////////////////////////
   $scope.handleJumblifyEvents = function() {
-    $rootScope.battleSocket.emit('powerJumblifySent');      
-  };
+    $rootScope.collabSocket.emit('powerJumblifySent');      
+  }
 
   $scope.handleJumblifyReceiveEvents = function() {
 
-    $rootScope.battleSocket.on('powerJumblifyReceived', function() {
-      var cursorPosition = document.getElementsByTagName('input').selectionStart;
-
+    $rootScope.collabSocket.on('powerJumblifyReceived', function() {
       var currentTextareaValue = $scope.userEditor.getValue();
       var length = currentTextareaValue.length;
       var index1 = length / 3;
@@ -293,11 +330,11 @@ angular.module('battlescript.battle', [])
   // handle power(blurify) events
   ////////////////////////////////////////////////////////////
   $scope.handleBlurifyEvents = function() {
-    $rootScope.battleSocket.emit('powerBlurifySent');      
+    $rootScope.collabSocket.emit('powerBlurifySent');      
   };
 
   $scope.handleBlurifyReceiveEvents = function() {
-    $rootScope.battleSocket.on('powerBlurifyReceived', function() {
+    $rootScope.collabSocket.on('powerBlurifyReceived', function() {
         jQuery(function($){
           $('.blurify__overlay').css('display','inline');
           $('.blurify__overlay').css("opacity","0.85");
@@ -315,46 +352,45 @@ angular.module('battlescript.battle', [])
   ////////////////////////////////////////////////////////////
 
   $scope.handleEditorEvents = function() {
-    $scope.userEditor.on('change', function(e) {
-      $rootScope.battleSocket.emit('userTextChange', $scope.userEditor.getValue());
-    });
+    // $scope.userEditor.on('change', function(e) {
+    // });
 
-    $rootScope.battleSocket.on('updateOpponent', function(text){
-      $scope.opponentEditor.setValue(text);
+    $rootScope.collabSocket.on('updateOpponent', function(text){
+      // console.log('user cursor position after updating opponent',$scope.thisUserCursorPosition);
+      $scope.userEditor.setValue(text.editorValue);
+      $scope.userEditor.setCursor($scope.thisUserCursorPosition);
+      // $scope.setCursorPlace(text);
     });
   };
 
 
-
-
-
   ////////////////////////////////////////////////////////////
-  // get the battle, get ready for showdown!
+  // get the collab, get ready for showdown!
   ////////////////////////////////////////////////////////////
   
-  $scope.getBattle = function() {
+  $scope.getCollab = function() {
     // first, cache some vars
-    $scope.battle;
-    $scope.battleDescription = null;
-    $scope.battleProjectId = null;
-    $scope.battleSolutionId = null;
+    $scope.collab;
+    $scope.collabDescription = null;
+    $scope.collabProjectId = null;
+    $scope.collabSolutionId = null;
 
-    // fetch a battle
-    Battle.getBattle($scope.battleRoomId)
+    // fetch a collab
+    Collab.getCollab($scope.collabRoomId)
     .then(function(data) {
-      // display the battle field
-      $scope.displayBattleField();
+      // display the collab field
+      $scope.displayCollabField();
 
-      // set up the battle specifics
-      $scope.battle = JSON.parse(data.body);
-      $scope.battleDescription = marked($scope.battle.description);
-      $scope.battleProjectId = $scope.battle.session.projectId;
-      $scope.battleSolutionId = $scope.battle.session.solutionId;
+      // set up the collab specifics
+      $scope.collab = JSON.parse(data.body);
+      $scope.collabDescription = marked($scope.collab.description);
+      $scope.collabProjectId = $scope.collab.session.projectId;
+      $scope.collabSolutionId = $scope.collab.session.solutionId;
 
       // update editors
       $timeout(function() {
-        $scope.userEditor.setValue($scope.battle.session.setup);
-        $scope.opponentEditor.setValue($scope.battle.session.setup);
+        $scope.userEditor.setValue($scope.collab.session.setup);
+        // $scope.opponentEditor.setValue($scope.collab.session.setup);
         $scope.$apply();
       }, 50);
 
@@ -366,41 +402,78 @@ angular.module('battlescript.battle', [])
   };
 
 
-
-
-
   ////////////////////////////////////////////////////////////
-  // display the battle field
+  // display the collab field
   ////////////////////////////////////////////////////////////
 
-  $scope.displayBattleField = function() {
-    // hide the spinner, hide the waiting area, and show the battle field
+  $scope.displayCollabField = function() {
+    // hide the spinner, hide the waiting area, and show the collab field
     $scope.spinnerOn = false;
-    $scope.showBattleWaitingArea = false;
-    $scope.battleFieldClass = 'active';
+    $scope.showCollabWaitingArea = false;
+    $scope.collabFieldClass = 'active';
 
-    // handle battle field events
-    $scope.handleBattleFieldEvents();
+    // handle collab field events
+    $scope.handleCollabFieldEvents();
     $scope.handleBlurifyReceiveEvents();
     $scope.handleJumblifyReceiveEvents();
+    $scope.partnerClickedCollab();
+    $scope.partnerReceivedCollabMessage();
+    $scope.endCollabSession();
   };
 
 
+  ////////////////////////////////////////////////////////////
+  // handle collab events
+  ////////////////////////////////////////////////////////////
+  $scope.partnerClickedCollab = function() {
+    $rootScope.collabSocket.on('partnerClickedAttempting', function(){
+      jQuery(function($){
+        $('.partnerClickedAttemptNotice').fadeIn( 1000 );
+      });
+      $scope.$apply(function() {
+        $scope.userButtonAttempt = 'Partner clicked Attempt Solution...';        
+      });
+    });
+  };
 
+  $scope.partnerReceivedCollabMessage = function() {
+    $rootScope.collabSocket.on('sendPartnerAttemptMessage', function(data){
+      jQuery(function($){
+        $('.partnerClickedAttemptNotice').fadeOut( 1000 );
+      });
+      $scope.$apply(function() {
+        $scope.userNotes = data;
+        $scope.userButtonAttempt = 'Attempt Solution';
+      });
+    });
+  };
+
+  $scope.endCollabSession = function() {
+    $rootScope.collabSocket.on('endCollabSession', function(){
+      $scope.$apply(function() {
+        $scope.userNotes = "All tests passing!";        
+      });
+      alert('You have the answer. Good job!');
+      console.log('directing back to dashboard, in endCollabSession');
+      $scope.$apply( function() {
+        $location.path('/dashboard'); //redirect back. winner found
+      });
+    });
+  };
 
 
   ////////////////////////////////////////////////////////////
-  // handle battle events
+  // handle collab events
   ////////////////////////////////////////////////////////////
 
-  $scope.handleBattleFieldEvents = function() {
-    $rootScope.battleSocket.on('opponentWon', function(){
+  $scope.handleCollabFieldEvents = function() {
+    $rootScope.collabSocket.on('opponentWon', function(){
       // Any negative is regarded as a loss. 
-      Users.statChange($scope.user, -1);
-      Users.pointsChange($scope.user, 1); //users get one point for every game they play but lost
+      // Users.statChange($scope.user, -1);
+      // Users.pointsChange($scope.user, 1); //users get one point for every game they play but lost
 
       // alert to the user!
-      alert('Looks like your opponent got the answer first!');
+      // alert('Looks like your opponent got the answer first!');
 
       //redirect back. winner found
       $location.path('/dashboard'); 
@@ -408,36 +481,30 @@ angular.module('battlescript.battle', [])
   };
   
 
-
-
-
-
-
-
   ////////////////////////////////////////////////////////////
-  // handle battle attempts
+  // handle collab attempts
   ////////////////////////////////////////////////////////////
 
-  $scope.attemptBattle = function($event) {
+  $scope.attemptCollab = function($event) {
     $event.preventDefault();
 
     $scope.userButtonAttempt = 'Attempting...';
+    $rootScope.collabSocket.emit('clickedAttempting');
 
-    Battle.attemptBattle($scope.battleProjectId, $scope.battleSolutionId, $scope.userEditor.getValue())
+    Collab.attemptCollab($scope.collabProjectId, $scope.collabSolutionId, $scope.userEditor.getValue())
       .then(function(data) {
         $scope.userButtonAttempt = 'Attempt Solution';
         $scope.userNotes = data.reason;
+        $rootScope.collabSocket.emit('userReceivedAttemptMessage', data.reason);
 
         // TODO: polling is successful at this point in time, time to send
         // and recieve the correct data
         console.log(data);
         if (data['passed'] === true) {
-          Users.statChange($scope.user, 1); // # of times to increase the wins. Should be 1 always
-          Users.pointsChange($scope.user, 10); //users get 10 points for every game they win
-
-          $rootScope.battleSocket.emit('winnerFound');
+          $rootScope.collabSocket.emit('solutionFound');
           $scope.userNotes = "All tests passing!";
           alert('You have the answer. Good job!');
+          console.log('directing back to dashboard, in attemptCollab');
           $location.path('/dashboard'); //redirect back. winner found
         }
       });

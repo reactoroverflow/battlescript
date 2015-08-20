@@ -4,6 +4,17 @@
   <div class="container">
     <div class="dashboard">
 
+      <div class="dashboard-notification" ng-show="userHasCollabRequest && collabRequestStatus === 'open'">
+        <h2 class="dashboard-notification__title">{{ collabRequestOpponentName }} would like to collaborate with you! (level: {{collabRequestChallengeLevel}})</h2>
+        <button class="dashboard-notification__button btn btn--secondary btn--medium btn--block" ng-click="collabAccepted()">Accept</button>
+        <button class="dashboard-notification__button btn btn--primary btn--medium btn--block" ng-click="collabDeclined()">Decline</button>
+      </div>
+
+      <div class="dashboard-notification" ng-show="userHasCollabRequest && collabRequestStatus === 'init'">
+        <h2 class="dashboard-notification__title">Collaboration ready!</h2>
+        <p>Click this link to start collaboration: <a ng-href="#/collab/{{ collabRoomHash }}">localhost:8000/#/collab/{{ collabRoomHash }}</a></p>
+      </div>
+
       <div class="dashboard-notification" ng-show="userHasBattleRequest && battleRequestStatus === 'open'">
         <h2 class="dashboard-notification__title">{{ battleRequestOpponentName }} challenged you! (level: {{battleRequestChallengeLevel}})</h2>
         <button class="dashboard-notification__button btn btn--secondary btn--medium btn--block" ng-click="battleAccepted()">Accept</button>
@@ -99,7 +110,8 @@
                 <span>{{ key }}</span>
                 <span><a href="#" ng-click="requestBattle($event, key)" ng-hide="challengeClicked[key]">Challenge?</a></span>
                 <span class ="dashboard-online__challenged" ng-show="challengeClicked[key]">Player Challenged!</span>
-                <span><a href="#" ng-click="requestColab($event, key)" ng-hide="challengeClicked[key]">Collaborate?</a></span>
+                <span><a href="#" ng-click="requestCollab($event, key)" ng-hide="collaborateClicked[key]">Collaborate?</a></span>
+                <span class ="dashboard-online__challenged" ng-show="collaborateClicked[key]">Request Sent!</span>
               </li>
             </ul>
           </div><!-- /dashboar widget -->
@@ -112,7 +124,7 @@
                 <span>{{ key }}</span>
                 <span><a href="#" ng-click="requestBattle($event, key)" ng-hide="challengeClicked[key]">Challenge?</a></span>
                 <span class ="dashboard-online__challenged" ng-show="challengeClicked[key]">Player Challenged!</span>
-                <span><a href="#" ng-click="requestColab($event, key)" ng-hide="challengeClicked[key]">Collaborate?</a></span>
+                <span><a href="#" ng-click="requestCollab($event, key)" ng-hide="challengeClicked[key]">Collaborate?</a></span>
               </li>
             </ul>
           </div><!-- /dashboar widget -->
