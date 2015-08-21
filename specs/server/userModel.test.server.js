@@ -283,13 +283,13 @@ describe('User Model', function () {
     });
   });
 
-  xit('should have an empty FBuserID if none specified', function (done) {
+  it('should have an empty fbId if none specified', function (done) {
     _user = new User(user);
     _user.save(function (err) {
       User.find({username: user.username}, function (err, users) {
         expect(err).to.equal(null);
         expect(users.length).to.equal(1);
-        expect(users[0].FBuserID).to.equal('');
+        expect(users[0].fbId).to.equal('');
         done();
       });
     });

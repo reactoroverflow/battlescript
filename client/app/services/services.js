@@ -117,6 +117,37 @@ angular.module('battlescript.services', [])
     });
   };
 
+  var setFbId = function(username, fbId) {
+    // console.log("i am in services trying to sent a POST req to server");
+    return $http({
+      method: 'POST',
+      url: '/api/users/setfbid',
+      data: {username: username, fbId: fbId}
+    });
+  };
+
+  var setFriend = function(username, friendusername) {
+    // console.log("i am in setFriend sending a POST req");
+    return $http({
+      method: 'POST',
+      url: '/api/users/setfriend',
+      data: {username: username, friendusername: friendusername}
+    });
+  };
+
+  var getFriendUsername = function(fbId) {
+    // console.log("Inside getFriendUsername");
+    return $http({
+      method: 'GET',
+      url: '/api/users/getfriend',
+      params: {fbId: fbId}  
+    })
+    // .then(function(res) {
+    //   console.log("Each response (services.js) ===> ", res.data.username);
+    //   return res.data.username;
+    // });
+  };
+
   var pointsChange = function(username, pointIncrease) {
     // console.log(username, pointIncrease);
     return $http({
@@ -139,7 +170,10 @@ angular.module('battlescript.services', [])
     statChange: statChange,
     pointsChange: pointsChange,
     avatarChange: avatarChange,
-    getLeaderboard: getLeaderboard
+    getLeaderboard: getLeaderboard,
+    setFbId: setFbId,
+    getFriendUsername: getFriendUsername,
+    setFriend: setFriend
   };
 })
 

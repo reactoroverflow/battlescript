@@ -1,6 +1,7 @@
 var User = require('./userModel.js'),
     Q    = require('q'),
-    jwt  = require('jwt-simple');
+    jwt  = require('jwt-simple'),
+    _    = require('underscore');
 
 module.exports = {
   signin: function (req, res, next) {
@@ -153,6 +154,49 @@ module.exports = {
         user.avatar = req.body.avatar;
         // console.log("user === ", user);
         user.save();
+      });
+  },
+
+  setFbId: function(req, res, next) {
+    var findUser = Q.nbind(User.findOne, User);
+    findUser({username: req.body.username})
+      .then(function (user) {
+        user.fbId = req.body.fbId;
+        user.save();
+        res.send({
+          username: user.username
+        })
+      });
+  },
+
+  getUsernameFromFbId: function(req, res, next){
+
+    var fbId = req.query.fbId;
+    // console.log("req.query", req.query)
+
+    var findUser = Q.nbind(User.findOne, User);
+    findUser({fbId: fbId})
+      .then(function (user) {
+        // console.log(user);
+        res.send({
+          username: user.username
+        });
+      });
+  }, 
+
+  setFriend: function(req, res, next) {
+    var findUser = Q.nbind(User.findOne, User);
+    findUser({username: req.body.username})
+      .then(function (user) {
+        // console.log("in server trying to put friend into friends array")
+        if(!_.contains(user.friends, req.body.friendusername)){
+          // console.log("hello world ============ ")
+          user.friends.push(req.body.friendusername);
+          user.save();
+        }
+        res.send({
+          friends: user.friends
+        });
       });
   },
   

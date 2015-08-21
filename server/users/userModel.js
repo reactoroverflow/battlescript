@@ -17,6 +17,16 @@ var UserSchema = new mongoose.Schema({
     default: ''
   },
 
+  fbId: {
+    type: String,
+    default: ''
+  },
+
+  friends: {
+    type: Array,
+    default: []
+  },
+
   password: {
     type: String,
     required: true
