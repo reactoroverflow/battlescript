@@ -94,19 +94,19 @@ angular.module('battlescript.dashboard', [])
     }
 
     $scope.onlineUsers = data;
-    _.each($scope.onlineUsers, function(hash, username) {
-      // console.log($scope.onlineUsers);
-      // console.log("key = ", username);
-      Users.getStats(username)
-        .then(function(stats){
-          // console.log("here are the stats === ", stats);
-          $scope.onlineUsers[username] = stats.avatar;
-          // console.log($scope.onlineUsers);
-        });
+    // _.each($scope.onlineUsers, function(hash, username) {
+    //   // console.log($scope.onlineUsers);
+    //   // console.log("key = ", username);
+    //   Users.getStats(username)
+    //     .then(function(stats){
+    //       // console.log("here are the stats === ", stats);
+    //       $scope.onlineUsers[username] = stats.avatar;
+    //       // console.log($scope.onlineUsers);
+    //     });
       
 
-      $scope.$apply();
-    });
+    $scope.$apply();
+    // });
     
 
   });
