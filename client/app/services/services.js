@@ -284,6 +284,64 @@ angular.module('battlescript.services', [])
 })
 
 ////////////////////////////////////////////////////////////
+// Collab factory
+// 
+// Handles all things to do when users engage in a collab
+// against each other:
+// 
+// - get collab, gets a collab from the api
+// - attempt collab, for when users attempt a solution
+// - submit collab, for when a user wants to submit a 
+//   final solution for a collab
+////////////////////////////////////////////////////////////
+
+.factory('Collab', function($http) {
+
+  // checks if valid collab room
+  var isValidCollabRoom = function(hash) {
+    return $http({
+      method: 'POST',
+      url: '/api/collab/checkvalidcollabroom',
+      data: {hash: hash}
+    }).then(function(res) {
+      return res.data;
+    });
+  };
+
+  // gets a collab
+  var getCollab = function(collabHash) {
+    return $http({
+      method: 'POST',
+      url: '/api/collabs/getcollab',
+      data: {collabHash: collabHash}
+    }).then(function(res) {
+      return res.data;
+    });
+  };
+
+  // attempts a battle
+  var attemptCollab = function(projectId, solutionId, code) {
+    return $http({
+      method: 'POST',
+      url: '/api/collabs/attemptcollab',
+      data: {
+        code: code,
+        projectId: projectId,
+        solutionId: solutionId
+      }
+    }).then(function(res) {
+      return res.data;
+    });
+  };
+
+  return {
+    isValidCollabRoom: isValidCollabRoom,
+    getCollab: getCollab,
+    attemptCollab: attemptCollab
+  };
+})
+
+////////////////////////////////////////////////////////////
 // Editor factory
 // 
 // Handles all things to do with setting up CodeMirror

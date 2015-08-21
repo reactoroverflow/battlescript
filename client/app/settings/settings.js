@@ -1,6 +1,6 @@
 angular.module('battlescript.settings', [])
 
-.controller('SettingsController', function ($scope, $rootScope, $timeout, Dashboard, Users, Battle, facebookService) {
+.controller('SettingsController', function ($scope, $rootScope, $timeout, Dashboard, Users, Battle, Collab, facebookService) {
   // get current auth username
   $scope.username = Users.getAuthUser();
 

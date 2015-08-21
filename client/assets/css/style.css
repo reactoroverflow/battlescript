@@ -473,7 +473,7 @@ button:focus {
 
 .header-main__user-name {
   margin: 0;
-  color: red;
+  color: white;
   font-weight: 300;
 }
 
@@ -568,7 +568,7 @@ button:focus {
 ----------------------------------------------------------------------------- */
 .main {
   padding: 48px 0;
-  background-color: #DBD1D2;
+  background-color: white;
   /*background-image: url("/assets/img/weapon_keyboard_50.png");*/
   background-repeat: no-repeat;
   background-size: 60%;

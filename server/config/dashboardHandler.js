@@ -1,5 +1,7 @@
 // requirements
 var BattleController = require('../battles/battleController');
+var CollabController = require('../collab/collabController');
+
 
 var socketList = {};
 
@@ -20,7 +22,34 @@ module.exports = function(socket, io){
   // Update Users when first connected
   
   updateUsers();
+
+  // look for signal that someone wants to collab
+  socket.on('outgoingCollabRequest', function(userData){
+    var oppId = socketList[userData.toUser];
+
+    socket.broadcast.to(oppId).emit('incomingCollabRequest', {
+      fromUser: userData.fromUser,
+      challengeLevel: userData.challengeLevel
+    });
+  });
   
+
+  // look for signal that a collab has been accepted
+  socket.on('collabAccepted', function(userData) {
+    var userId = socketList[userData.user];
+    var opponentId = socketList[userData.opponent];
+    var challengeLevel = userData.challengeLevel;
+    console.log("COLLABORATION ACCEPTED, CHALLENGE LEVEL: ", challengeLevel);
+
+    CollabController.addCollabRoom(challengeLevel, function(roomhash) {
+      // now, need to broadcast to the opponent that it's time for collab
+      socket.broadcast.to(opponentId).emit('prepareForCollab', {roomhash: roomhash});
+
+      // and also, broadcast back to user
+      io.sockets.connected[userId].emit('prepareForCollab', {roomhash: roomhash});
+    });
+  });
+
   // look for signal that someone wants to battle
   socket.on('outgoingBattleRequest', function(userData){
     var oppId = socketList[userData.toUser];
