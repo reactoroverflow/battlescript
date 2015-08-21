@@ -171,6 +171,7 @@ angular.module('battlescript.battle', [])
         $scope.ifBothPlayersReady();
       } else {
         $scope.opponent = opponent;
+        $scope.getOpponentAvatar();
       }
     });
 
@@ -179,9 +180,19 @@ angular.module('battlescript.battle', [])
     });
   };
 
+  ///////////opponent avatar ///////////
 
+  $scope.getOpponentAvatar = function() {
+    Users.getStats($scope.opponent)
+      .then(function(stats){
 
+        // console.log("here are the stats for opponent avatar === ", stats);
+        $scope.opponentAvatar = stats.avatar;
+      });
+     
+  };
 
+  
 
   ////////////////////////////////////////////////////////////
   // this updates the user's ready state depending on whether

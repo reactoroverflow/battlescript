@@ -87,6 +87,7 @@ angular.module('battlescript.dashboard', [])
     //TODO: Online users.
 
     // console.log('NEED TO UPDATE USERS CUZ OF SOME EVENT');
+    // console.log(data);
     
 
     if (data[$scope.username]) {
