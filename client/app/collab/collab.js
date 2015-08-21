@@ -14,32 +14,32 @@ angular.module('battlescript.collab', [])
   //   // $scope.userEditor.replaceRange('', partnerCursorCoords.cursorPosition);
   // }
   
-  $scope.sendUserTextChangeSocketSignal = function() {
+  $scope.sendUserTextChangeSocketSignal = function(changeObj) {
     $scope.userEditorProperties = {
       // cursorCoords: $scope.userEditor.cursorCoords(), 
       editorValue: $scope.userEditor.getValue(), 
       cursorPosition: $scope.userEditor.getCursor()
     };
-    $rootScope.collabSocket.emit('userTextChange', $scope.userEditorProperties);
+    if (changeObj.origin === '+input' || changeObj.origin === 'paste' || changeObj.origin === '+delete' || changeObj.origin === 'undo' || changeObj.origin === 'cut' || changeObj.origin === 'redo') {
+      $rootScope.collabSocket.emit('userTextChange', changeObj); //updateOpponent
+    }
   };
 
   ////////////////////////////////////////////////////////////
   // jQuery function
   ////////////////////////////////////////////////////////////
   jQuery(function($){
+    
     $('body').keydown(function() {
+
       setTimeout(function() {
-        $scope.sendUserTextChangeSocketSignal();
         $scope.thisUserCursorPosition = $scope.userEditor.getCursor();
-        // console.log($scope.thisUserCursorPosition);
       }, 1);
     });
 
     $('body').click(function() {
       setTimeout(function() {
         $scope.thisUserCursorPosition = $scope.userEditor.getCursor();
-        // console.log($scope.thisUserCursorPosition);
-        // $scope.sendUserTextChangeSocketSignal();
       }, 1);
     }); 
 
@@ -291,6 +291,12 @@ angular.module('battlescript.collab', [])
 
     // get the collab
     $scope.getCollab();
+
+    $scope.userEditor.on('change', function(codeMirror, changeObj) {
+      console.log(changeObj.origin);
+      $scope.sendUserTextChangeSocketSignal(changeObj);
+    });
+
   };
 
   ////////////////////////////////////////////////////////////
@@ -355,10 +361,12 @@ angular.module('battlescript.collab', [])
     // $scope.userEditor.on('change', function(e) {
     // });
 
-    $rootScope.collabSocket.on('updateOpponent', function(text){
+    $rootScope.collabSocket.on('updateOpponent', function(changeObj){
       // console.log('user cursor position after updating opponent',$scope.thisUserCursorPosition);
-      $scope.userEditor.setValue(text.editorValue);
-      $scope.userEditor.setCursor($scope.thisUserCursorPosition);
+      console.log('updateOpponent changeObj',changeObj);
+      $scope.userEditor.replaceRange(changeObj.text, changeObj.from, changeObj.to);
+      // $scope.userEditor.setValue(text.editorValue);
+      // $scope.userEditor.setCursor($scope.thisUserCursorPosition);
       // $scope.setCursorPlace(text);
     });
   };
