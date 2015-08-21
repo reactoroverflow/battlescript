@@ -14,17 +14,29 @@
             <h2 class="settings__title">Change password</h2>
             <div class="dashboard-stats-entry__body">
               <label for="newPassword">Enter new password</label>
-              </br>
+              <br>
               <input name="newPassword" class="settings__input"></input>
-              </br>
-              </br>
+              <br>
+              <br>
               <label for="confirmPassword">Confirm new password</label>
-              </br>
+              <br>
               <input name="confirmPassword" class="settings__input"></input>
-              </br>
-              </br>
+              <br>
+              <br>
               <button>Submit</button>
             </div>
+            <br>
+            <div class="dashboard-stats-entry">
+            <h2 class="settings__title">Link Facebook Friends</h2>
+            <div class="dashboard-stats-entry__body">
+              <fb:login-button size="large" data-max-rows="5" data-show-faces="true" scope="public_profile, user_friends, email, publish_actions" data-auto-logout-link="true">Link Facebook</fb:login-button>
+              <br>
+              <br>
+              <button ng-click="doAllTheThings()">ADD FACEBOOK FRIENDS TO BATTLESCRIPT</button>
+              <br>
+              <div class="friends_success"><center>Friends have been added to your friends list!</center></div>
+            </div>
+          </div>
           </div>
         </div>
 
@@ -33,22 +45,22 @@
             <h2 class="settings__title">Add Email Address</h2>
             <div class="dashboard-stats-entry__body">
               <label for="email">Enter an Email Address</label>
-              </br>
+              <br>
               <input name="email" class="settings__input"></input>
-              </br>
-              </br>
+              <br>
+              <br>
               <button>Submit</button>
             </div>
           </div>
-          </br>
+          <br>
           <div class="dashboard-stats-entry">
             <h2 class="settings__title">Add Phone Number</h2>
             <div class="dashboard-stats-entry__body">
               <label for="phone">Enter a Phone Number</label>
-              </br>
+              <br>
               <input name="phone" class="settings__input"></input>
-              </br>
-              </br>
+              <br>
+              <br>
               <button>Submit</button>
             </div>
           </div>
@@ -56,9 +68,6 @@
         </div>
 
       </div>
-      </br>
-      <fb:login-button size="large" scope="public_profile, user_friends, email">Link Facebook</fb:login-button>
-      <button ng-click="doAllTheThings()">FIND FRIENDS</button>
 
     </div><!-- dashboard -->
   </div><!-- /container -->

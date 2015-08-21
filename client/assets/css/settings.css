@@ -26,3 +26,12 @@
   line-height: 1.2;
   font-size: 30px;
 }
+
+.friends_success {
+  background-color: #3AC535;
+  position: relative;
+  color: white;
+  border-radius: 3px;
+  width: 100%;
+  display: none;
+}
