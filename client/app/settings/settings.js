@@ -53,7 +53,7 @@ angular.module('battlescript.settings', [])
             facebookService.getFriends() 
               .then(function(response) {
                 _.each(response, function(user) {
-                  // console.log("EACH USER: ===> ", user)
+                  console.log("EACH USER: ===> ", user)
                   Users.getFriendUsername(user.id)
                     .then(function(res) {
                       // console.log("res.data.username", res.data.username);

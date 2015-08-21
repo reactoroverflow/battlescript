@@ -87,22 +87,50 @@ angular.module('battlescript.dashboard', [])
     //TODO: Online users.
 
     // console.log('NEED TO UPDATE USERS CUZ OF SOME EVENT');
-    // console.log(data);
+    
 
     if (data[$scope.username]) {
       delete data[$scope.username];
     }
 
     $scope.onlineUsers = data;
-    $scope.$apply();
+    _.each($scope.onlineUsers, function(hash, username) {
+      // console.log($scope.onlineUsers);
+      // console.log("key = ", username);
+      Users.getStats(username)
+        .then(function(stats){
+          // console.log("here are the stats === ", stats);
+          $scope.onlineUsers[username] = stats.avatar;
+          // console.log($scope.onlineUsers);
+        });
+      
+
+      $scope.$apply();
+    });
+    
 
   });
 
   ////////////////////////////////////////////////////////////
   // friends
   ////////////////////////////////////////////////////////////
-  $scope.friends = {cody: 'daig', andrew: 'kishino', lina: 'lu'};
+  // $scope.friends = {cody: 'daig', andrew: 'kishino', lina: 'lu'};
+  $scope.friends = {};
 
+  $scope.fetchFriends = function() {
+    Users.getFriends($scope.username).then(function(friends) {
+      _.each(friends.data.friends, function(friend) {
+        Users.getStats(friend)
+          .then(function(stats){
+            $scope.friends[friend] = stats.avatar;
+          });
+      });
+
+    });
+  };
+
+  $scope.fetchFriends();
+  // console.log($scope.friends);
   ////////////////////////////////////////////////////////////
   // set an avatar for a user
   ////////////////////////////////////////////////////////////
@@ -129,13 +157,29 @@ angular.module('battlescript.dashboard', [])
     'img': 'http://orig15.deviantart.net/33d6/f/2011/058/e/1/hello_kitty_nerd_by_ladypinkilicious-d3ajpii.png',
     'name': 'Melisandre'
     }, {
-    'img': 'http://www.designtickle.com/cdnmedia/-/2012/07/design-code-html5-web-development/20-yootheme-illustration-html5-nerd.png',
+    'img': 'http://ih1.redbubble.net/image.80947276.2281/sticker,375x360.u2.png',
     'name': 'Jaqen'
     }, {
     'img': 'http://www.pubzi.com/f/lg-geek-nerd-smiley-surprise-emoticon.png',
     'name': 'Tywin'
+    }, {
+    'img': 'https://www.mystickerface.com/media/catalog/product/cache/1/image/1000x739/9df78eab33525d08d6e5fb8d27136e95/b/u/bublet-01.png',
+    'name': 'Cat1'
+    }, {
+    'img': 'http://images.akamai.steamusercontent.com/ugc/32988354999880701/F2B5523CE09763455E24168D883B3B1E15CAD5A7/',
+    'name': 'Cat2'
+    }, {
+    'img': 'http://3.bp.blogspot.com/-7iLX9rVetHw/TqFtXivihGI/AAAAAAAAPs4/cYqc0lB4QV8/s1600/RetroCatsHead.png',
+    'name': 'Cat3'
+    }, {
+    'img': 'http://40.media.tumblr.com/e6ae65fc3bda818280973566e515e3f5/tumblr_nq4pe4th2i1tvc2voo1_500.png',
+    'name': 'Cat4'
+    }, {
+    'img': 'http://38.media.tumblr.com/2f1c6252cc6c2271fef495328f3698ba/tumblr_inline_mpqrajFx911qz4rgp.png',
+    'name': 'Cat5'
     }
   ];
+
   $scope.my = {
     favorite: ''
   };
@@ -151,10 +195,12 @@ angular.module('battlescript.dashboard', [])
 
   $scope.setAvatar = function() {
     Users.avatarChange($scope.username, $scope.my.favorite.img)
-      .then(function() {
+      .then(function(res) {
+        // console.log("setAvatar res.data", res.data)
+        $scope.getStats($scope.username);
+        $scope.toShowImagePreview = false;
     });
-    $scope.toShowImagePreview = false;
-    $scope.getStats($scope.username);
+     
   };
 
   ////////////////////////////////////////////////////////////

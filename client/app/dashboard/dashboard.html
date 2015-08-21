@@ -48,23 +48,19 @@
 
           </div>
         </div>
-          <div class="grid__item grid__item--20-l">
+          <div class="grid__item grid__item--40-l">
             <div class="dashboard-stats-entry">
               <h3 class="dashboard-stats-entry__title">Current Streak</h3>
               <div class="dashboard-stats-entry__body">
                 <p class="dashboard-stats-entry__stat"><span>{{ currentStreak }}</span> wins</p>
               </div>
             </div>
-          </div>
-          <div class="grid__item grid__item--20-l">
             <div class="dashboard-stats-entry">
               <h3 class="dashboard-stats-entry__title">Longest Streak</h3>
               <div class="dashboard-stats-entry__body">
                 <p class="dashboard-stats-entry__stat"><span>{{ longestStreak }}</span> wins</p>
               </div>
             </div>
-          </div>
-          <div class="grid__item grid__item--20-l">
             <div class="dashboard-stats-entry">
               <h3 class="dashboard-stats-entry__title">All Time</h3>
               <div class="dashboard-stats-entry__body">
@@ -72,11 +68,11 @@
               </div>
             </div>
           </div>
-          <div class="grid__item grid__item--20-l">
+          
+          <div class="grid__item grid__item--40-l">
             <div class="dashboard-stats-entry">
               <h3 class="dashboard-stats-entry__title">Problem Level</h3>
               <div class="dashboard-stats-entry__body">
-                <div>Difficulty = {{challengeLevelDesc}}</div>
                 <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="nightmare()">Nightmare</button></p>
                 <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="hard()">Crazy Hard</button></p>
                 <p class="dashboard-stats-entry__stat"><button class="dashboard-notification__button btn btn--primary btn--medium2 btn--block" ng-click="meh()">Meh</button></p>
@@ -91,7 +87,7 @@
 
 
       <div class="grid grid--l">
-        <div class="grid__item grid__item--33-l">
+        <div class="grid__item grid__item--20-l">
           <div class="dashboard-widget dashboard-leaderboard">
             <h2 class="dashboard-widget__title">Leaderboard</h2>
              <ul class="dashboard-online__list">
@@ -102,11 +98,12 @@
             </ul>
           </div><!-- /dashboar widget -->
         </div><!-- /grid item -->
-        <div class="grid__item grid__item--33-l">
+        <div class="grid__item grid__item--40-l">
           <div class="dashboar-widget dashboard-online">
             <h2 class="dashboar-widget__title">Online Now</h2>
             <ul class="dashboard-online__list">
               <li class="dashboard-online__item" ng-repeat="(key, value) in onlineUsers">
+                <div class="friendavatar"> <img src="{{ value }}"/> </div>
                 <span>{{ key }}</span>
                 <span><a href="#" ng-click="requestBattle($event, key)" ng-hide="challengeClicked[key]">Challenge?</a></span>
                 <span class ="dashboard-online__challenged" ng-show="challengeClicked[key]">Player Challenged!</span>
@@ -116,11 +113,12 @@
             </ul>
           </div><!-- /dashboar widget -->
         </div><!-- /grid item -->
-        <div class="grid__item grid__item--33-l">
+        <div class="grid__item grid__item--40-l">
           <div class="dashboar-widget dashboard-friends">
             <h2 class="dashboar-widget__title">Friends</h2>
             <ul class="dashboard-online__list">
               <li class="dashboard-online__item" ng-repeat="(key, value) in friends">
+                <div class="friendavatar"> <img src="{{ value }}"/> </div>
                 <span>{{ key }}</span>
                 <span><a href="#" ng-click="requestBattle($event, key)" ng-hide="challengeClicked[key]">Challenge?</a></span>
                 <span class ="dashboard-online__challenged" ng-show="challengeClicked[key]">Player Challenged!</span>

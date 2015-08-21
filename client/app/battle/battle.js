@@ -69,6 +69,7 @@ angular.module('battlescript.battle', [])
 
   $scope.user = Users.getAuthUser();
   $scope.userInfo = {username: $scope.user};
+  $scope.avatar;
 
   ////////////////////////////////////////////////////////////
   // get user stats for dashboard
@@ -81,6 +82,8 @@ angular.module('battlescript.battle', [])
         $scope.longestStreak = stats.longestStreak;
         $scope.totalWins = stats.totalWins;
         $scope.totalPoints = stats.totalPoints;
+        $scope.avatar = stats.avatar;
+        // console.log("$scope.avatar", $scope.avatar);
       });
   };
 

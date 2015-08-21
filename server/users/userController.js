@@ -154,6 +154,9 @@ module.exports = {
         user.avatar = req.body.avatar;
         // console.log("user === ", user);
         user.save();
+        res.send({
+          avatar: user.avatar
+        });
       });
   },
 
@@ -165,7 +168,7 @@ module.exports = {
         user.save();
         res.send({
           username: user.username
-        })
+        });
       });
   },
 
@@ -196,6 +199,21 @@ module.exports = {
         }
         res.send({
           friends: user.friends
+        });
+      });
+  },
+
+  getFriendsList: function(req, res, next) {
+    // console.log('inside getFriendsList');
+    var username = req.query.username;
+    // console.log("username ===== ", username)
+
+    var findUser = Q.nbind(User.findOne, User);
+    findUser({username: username})
+      .then(function (user) {
+        // console.log(user);
+        res.send({
+          friends: user.friends,
         });
       });
   },

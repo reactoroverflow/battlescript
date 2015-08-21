@@ -1,9 +1,17 @@
+.grid__item.grid__item--40-l {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 40%;
+        -ms-flex: 0 0 40%;
+            flex: 0 0 40%;
+};
+
 .grid__item--20-l {
     -webkit-box-flex: 0;
     -webkit-flex: 0 0 20%;
         -ms-flex: 0 0 20%;
             flex: 0 0 20%;
 };
+
 
 img.char {
   max-width: 50px;
@@ -16,4 +24,9 @@ h3.dash-stats-entry__title {
   background-color: #DC1616;
   font-size: 12px;
   font-weight: 400;
+}
+
+.friendavatar {
+  max-width: 50px;
+  height: auto;
 }

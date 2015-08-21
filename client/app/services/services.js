@@ -141,7 +141,20 @@ angular.module('battlescript.services', [])
       method: 'GET',
       url: '/api/users/getfriend',
       params: {fbId: fbId}  
-    })
+    });
+    // .then(function(res) {
+    //   console.log("Each response (services.js) ===> ", res.data.username);
+    //   return res.data.username;
+    // });
+  };
+
+  var getFriends = function(username) {
+    console.log("Inside getFriends");
+    return $http({
+      method: 'GET',
+      url: '/api/users/getfriends',
+      params: {username: username}  
+    });
     // .then(function(res) {
     //   console.log("Each response (services.js) ===> ", res.data.username);
     //   return res.data.username;
@@ -173,7 +186,8 @@ angular.module('battlescript.services', [])
     getLeaderboard: getLeaderboard,
     setFbId: setFbId,
     getFriendUsername: getFriendUsername,
-    setFriend: setFriend
+    setFriend: setFriend,
+    getFriends: getFriends
   };
 })
 
