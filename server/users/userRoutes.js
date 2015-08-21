@@ -10,6 +10,7 @@ module.exports = function (app) {
   app.post('/signout', userController.signout);
   app.get('/stats', userController.stats);
   app.get('/getfriend', userController.getUsernameFromFbId);
+  app.get('/getfriends', userController.getFriendsList);
   app.post('/setfriend', userController.setFriend);
   app.post('/statchange', userController.statChange);
   app.post('/avatarchange', userController.avatarChange);
