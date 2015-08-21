@@ -57,13 +57,14 @@ angular.module('battlescript.settings', [])
                   Users.getFriendUsername(user.id)
                     .then(function(res) {
                       // console.log("res.data.username", res.data.username);
-                      //send this username into friends array of user
+                      // send this username into friends array of user
                       Users.setFriend($scope.username, res.data.username)
                         .then(function(res) {
-                          // console.log("res from setFriend", res);
+                          // console.log("YOU DID IT!");
                         });
                     });
                 });
+                $('.friends_success').show();
               });
           });
       });

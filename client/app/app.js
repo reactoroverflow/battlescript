@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 // bootstrap the app and all services and controllers
 ////////////////////////////////////////////////////////////
-
+var FB;
 angular.module('battlescript', [
   'battlescript.services',
   'battlescript.auth',
@@ -155,6 +155,18 @@ angular.module('battlescript', [
     };
 })
 
+.directive("fbLoginButton", function() {
+    
+    return {
+        restrict: 'E',
+        link: function (scope, iElement, iAttrs) {
+            if (FB) {
+                FB.XFBML.parse(iElement[0].parent);
+            }
+        }
+    }
+})
+
 ////////////////////////////////////////////////////////////
 // run the style
 ////////////////////////////////////////////////////////////
@@ -165,7 +177,7 @@ angular.module('battlescript', [
 // Facebook auth init
 ////////////////////////////////////////////////////////////
 
-  $rootScope.user = {};
+  // $rootScope.user = {};
 
   $window.fbAsyncInit = function() {
     // Executed when the SDK is loaded
