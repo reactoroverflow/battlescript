@@ -149,7 +149,7 @@ angular.module('battlescript.services', [])
   };
 
   var getFriends = function(username) {
-    console.log("Inside getFriends");
+    // console.log("Inside getFriends");
     return $http({
       method: 'GET',
       url: '/api/users/getfriends',
@@ -205,7 +205,7 @@ angular.module('battlescript.services', [])
   // key pair value in string format
   var createSocket = function(route, params) {
     var query = params.join('&');
-    return io.connect('http://localhost:8000/#/' + route, {
+    return io.connect('localhost:8000/#/' + route, {
       query: query,
       'force new connection': true
     });

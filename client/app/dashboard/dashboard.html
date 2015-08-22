@@ -103,7 +103,6 @@
             <h2 class="dashboar-widget__title">Online Now</h2>
             <ul class="dashboard-online__list">
               <li class="dashboard-online__item" ng-repeat="(key, value) in onlineUsers">
-                <div class="friendavatar"> <img src="{{ value }}"/> </div>
                 <span>{{ key }}</span>
                 <span><a href="#" ng-click="requestBattle($event, key)" ng-hide="challengeClicked[key]">Challenge?</a></span>
                 <span class ="dashboard-online__challenged" ng-show="challengeClicked[key]">Player Challenged!</span>
