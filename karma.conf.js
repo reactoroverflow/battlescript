@@ -12,8 +12,15 @@ module.exports = function(config) {
       'client/lib/angular/angular.min.js',
       'client/lib/angular-ui-router/release/angular-ui-router.min.js',
       'client/lib/angular-sanitize/angular-sanitize.min.js',
+      'client/lib/angular-mocks/angular-mocks.js',
+      'client/lib/jquery/dist/jquery.min.js',
       'client/app/**/*.js',
+      'node_modules/expect.js/index.js',
       'specs/client/**/*.test.client.js'
-    ]
+    ],
+    //reporters: ['nyan','unicorn']
+    reporters: ['nyan'],
+    singleRun: true,
+    autoWatch: false
   });
 };

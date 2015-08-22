@@ -2,6 +2,6 @@
 
 describe('Basic Client Side Tests', function () {
   it('should pass a basic truth test', function () {
-    expect(true).toBe(true);
+    expect(true).to.equal(true);
   });
 });

@@ -110,11 +110,11 @@ gulp.task('mocha', function () {
 // Client test task (karma)
 //////////////////////////////////////////////////
 
-gulp.task('karma', function (done) {
+gulp.task('karma', function () {
   return new karmaServer({
     configFile: __dirname + '/karma.conf.js',
     singleRun: true
-  }, done).start();
+  }).start();
 });
 
 //////////////////////////////////////////////////
