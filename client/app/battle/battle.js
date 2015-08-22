@@ -296,6 +296,7 @@ angular.module('battlescript.battle', [])
       } else {
         $scope.userEditor.setValue(_.shuffle(textChunk1.split('')).join('') + textChunk2 + textChunk3);            
       }
+      $scope.userEditor.clearHistory();
     });
   };
 
