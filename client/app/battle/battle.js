@@ -168,6 +168,7 @@ angular.module('battlescript.battle', [])
         $scope.opponentReadyClass = 'active';
         $scope.opponentReadyText = 'Ready for battle!';
         $scope.opponent = opponent;
+        $scope.getOpponentAvatar();
         $scope.ifBothPlayersReady();
       } else {
         $scope.opponent = opponent;
