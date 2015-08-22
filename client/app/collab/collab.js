@@ -108,6 +108,7 @@ angular.module('battlescript.collab', [])
 
   $scope.user = Users.getAuthUser();
   $scope.userInfo = {username: $scope.user};
+  $scope.avatar;
 
   ////////////////////////////////////////////////////////////
   // get user stats for dashboard
@@ -120,10 +121,12 @@ angular.module('battlescript.collab', [])
         $scope.longestStreak = stats.longestStreak;
         $scope.totalWins = stats.totalWins;
         $scope.totalPoints = stats.totalPoints;
+        $scope.avatar = stats.avatar;
       });
   };
 
   $scope.getStats($scope.username);
+
 
 
 
@@ -204,9 +207,11 @@ angular.module('battlescript.collab', [])
         $scope.opponentReadyClass = 'active';
         $scope.opponentReadyText = 'Ready to collaborate!';
         $scope.opponent = opponent;
+        $scope.getOpponentAvatar();
         $scope.ifBothPlayersReady();
       } else {
         $scope.opponent = opponent;
+        $scope.getOpponentAvatar();
       }
     });
 
@@ -215,9 +220,17 @@ angular.module('battlescript.collab', [])
     });
   };
 
+  ///////////opponent avatar ///////////
 
+  $scope.getOpponentAvatar = function() {
+    Users.getStats($scope.opponent)
+      .then(function(stats){
 
-
+        console.log("here are the stats for opponent avatar === ", stats);
+        $scope.opponentAvatar = stats.avatar;
+      });
+     
+  };
 
   ////////////////////////////////////////////////////////////
   // this updates the user's ready state depending on whether
@@ -293,7 +306,7 @@ angular.module('battlescript.collab', [])
     $scope.getCollab();
 
     $scope.userEditor.on('change', function(codeMirror, changeObj) {
-      console.log(changeObj.origin);
+      // console.log(changeObj.origin);
       $scope.sendUserTextChangeSocketSignal(changeObj);
     });
 
